@@ -1,0 +1,57 @@
+HƯỚNG DẪN CẬP NHẬT TÀI LIỆU — ERP GUIDANCE PORTAL
+======================================================
+
+Mỗi khi cần thêm hoặc cập nhật PDF / Video cho một module,
+chỉ cần mở file: src/config.js
+
+CÁCH LẤY FILE ID TỪ GOOGLE DRIVE
+----------------------------------
+1. Upload file PDF hoặc Video lên Google Drive
+2. Click chuột phải vào file → Chọn "Share"
+3. Đổi quyền truy cập thành "Anyone with the link" (Bất kỳ ai có link)
+4. Copy link — link có dạng:
+   https://drive.google.com/file/d/FILE_ID_NẰM_Ở_ĐÂY/view
+5. Lấy phần ở giữa /d/ và /view — đó là FILE_ID
+
+VÍ DỤ
+----------------------------------
+Link:    https://drive.google.com/file/d/1aBcDeFgHiJkLmNoPqRsTuV/view
+File ID: 1aBcDeFgHiJkLmNoPqRsTuV
+
+CÁCH CẬP NHẬT TRONG config.js
+----------------------------------
+Mở src/config.js, tìm module cần cập nhật và điền File ID vào:
+
+  {
+    id: "login",
+    label: "Login",
+    pdf: "1aBcDeFgHiJkLmNoPqRsTuV",    ← Paste File ID của PDF vào đây
+    video: "2xYzAbCdEfGhIjKlMnOpQr",   ← Paste File ID của Video vào đây
+  }
+
+Sau khi lưu file → commit và push lên GitHub → Vercel tự động deploy.
+
+DANH SÁCH MODULE & VỊ TRÍ TRONG CONFIG.JS
+----------------------------------
+1.  LOGIN                  → id: "login"
+2.  ITEM MASTER            → id: "item-master"
+3.  BOM                    → id: "bom"
+4.  SALES ORDER            → id: "sales-order"
+5.  PRODUCTION ORDER
+    ├─ Production Order    → id: "production-order-main"
+    └─ Recipe              → id: "recipe"
+6.  PURCHASE
+    ├─ Purchase Requisitions → id: "purchase-requisitions"
+    └─ Purchase Orders       → id: "purchase-orders"
+7.  DELIVERY
+    ├─ Outbound Delivery   → id: "outbound-delivery"
+    ├─ Inbound Delivery    → id: "inbound-delivery"
+    ├─ Good Issues         → id: "good-issues"
+    └─ Good Receipts       → id: "good-receipts"
+8.  INVOICE                → id: "invoice"
+
+LƯU Ý
+----------------------------------
+- Nếu để trống pdf: "" hoặc video: "" thì web sẽ hiện placeholder "Chưa có tài liệu".
+- Để thêm sub-module mới cho Production Order: thêm object vào mảng "children" của tab "production-order".
+- Không cần đụng vào các file khác ngoài config.js.

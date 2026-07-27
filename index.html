@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>ERP Guidance — Hướng dẫn Sử dụng Hệ thống ERP</title>
+  <meta name="description"
+    content="Hệ thống hướng dẫn sử dụng ERP nội bộ công ty. Xem tài liệu PDF và video hướng dẫn cho từng module: Login, Item Master, BOM, Sales Order, Production Order, Purchase, Delivery, Invoice." />
+  <meta name="keywords"
+    content="ERP, hướng dẫn, tài liệu, PDF, video, Item Master, BOM, Sales Order, Production Order, Purchase, Delivery, Invoice" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ERP Guidance — Hướng dẫn Sử dụng Hệ thống ERP" />
+  <meta property="og:description" content="Hệ thống hướng dẫn sử dụng ERP nội bộ — xem PDF và video trực tiếp." />
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>" />
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" id="mobile-toggle" aria-label="Mở menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ─── SIDEBAR ─────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <div class="logo-text-group">
+            <span class="logo-name">ERP Guidance</span>
+            <span class="logo-sub">Hướng dẫn Sử dụng</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav" aria-label="Module Navigation">
+        <!-- Built by JS -->
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Đang hoạt động</span>
+        </div>
+        <div class="made-by">made by fushi - do not copy without permission</div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─────────────────────────── -->
+    <main class="main-content" role="main">
+
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="page-title-group">
+          <div class="page-breadcrumb" id="breadcrumb">
+            <span>Modules</span> / Trang chủ
+          </div>
+          <h1 class="page-title" id="page-title">Chào mừng</h1>
+          <p class="page-subtitle" id="page-subtitle">Chọn một module từ menu bên trái để bắt đầu</p>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcome-screen">
+          <div class="welcome-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <h2 class="welcome-title">ERP Guidance Portal</h2>
+          <p class="welcome-desc">
+            Hệ thống hướng dẫn sử dụng ERP nội bộ. Chọn module từ menu bên trái để xem tài liệu PDF và video hướng dẫn
+            chi tiết.
+          </p>
+          <div class="welcome-grid" id="welcome-chips">
+            <!-- Built by JS -->
+          </div>
+        </div>
+
+        <!-- Module Content Container -->
+        <div id="content-container" style="display:none; flex-direction:column; gap:24px;">
+          <!-- Built by JS -->
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
