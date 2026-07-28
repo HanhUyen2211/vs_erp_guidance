@@ -27,7 +27,7 @@ export const siteConfig = {
   logoText: "ERP",
   // Tài liệu tổng quan & clip full tất cả functions (hiển thị ở trang Home)
   homePdf: "12-mXo9QiLRJ9IY-ei-1mdrabXXg2y4Uk",   // Google Drive File ID — Tài liệu tổng hợp toàn bộ ERP
-  homeVideo: "1r5jI7Nv9wIrNkMy9tku2ZAqw0TlNzgL-", // Google Drive File ID — Clip hướng dẫn đầy đủ tất cả functions
+  homeVideo: "1cAoYtNfdkxl9hm3NKJkwsQI4W58K2r7t", // Google Drive File ID — Clip hướng dẫn đầy đủ tất cả functions
 };
 
 /**
@@ -244,29 +244,29 @@ export const tabs = [
         id: "outbound-delivery",
         label: "Outbound Delivery",
         description: "Giao hàng đi",
-        pdf: "",
-        video: "",
+        pdf: "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+        video: "1BKelm1HQiWkKHqFL1cDOtIgTFwXk1Hwo",
       },
       {
         id: "inbound-delivery",
         label: "Inbound Delivery",
         description: "Nhận hàng về",
-        pdf: "",
-        video: "",
+        pdf: "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+        video: "1-4q2Ztf9N-uj3WTbQGSo3EdJcRwkBYZM",
       },
       {
         id: "good-issues",
         label: "Good Issues",
         description: "Xuất kho",
-        pdf: "",
-        video: "",
+        pdf: "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+        video: "1SaTiE5-_Yn1wPX7TaWlrJ7-H6OXSJwOS",
       },
       {
         id: "good-receipts",
         label: "Good Receipts",
         description: "Nhập kho",
-        pdf: "",
-        video: "",
+        pdf: "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+        video: "1RDjaeefj9g4s1rAAzYmzctA11HxwOgHz",
       },
     ],
   },
@@ -278,7 +278,7 @@ export const tabs = [
     id: "invoice",
     label: "Invoice",
     icon: "🧾",
-    pdf: "",
-    video: "",
+    pdf: "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+    video: "1Nn86HMpur8nnuHkSr8h4xC1R-fxe8KNV",
   },
 ];
