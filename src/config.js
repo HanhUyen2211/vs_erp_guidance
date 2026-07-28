@@ -7,13 +7,17 @@
  * 1. Để thêm PDF từ Google Drive:
  *    - Mở file trên Google Drive → Share → "Anyone with the link"
  *    - Lấy FILE_ID từ URL: https://drive.google.com/file/d/FILE_ID/view
- *    - Paste vào trường: pdf: "FILE_ID"
+ *    - Paste vào trường: pdf: "FILE_ID"  hoặc  fileId: "FILE_ID"
  *
  * 2. Để thêm Video từ Google Drive:
  *    - Tương tự lấy FILE_ID
  *    - Paste vào trường: video: "FILE_ID"
  *
  * 3. Để thêm module mới: copy một object trong mảng tabs và chỉnh sửa.
+ *
+ * 4. Để thêm tài liệu vào tab "Tài liệu":
+ *    - Thêm object vào mảng documents bên dưới
+ *    - Điền fileId từ Google Drive
  * =====================================================================
  */
 
@@ -25,6 +29,113 @@ export const siteConfig = {
   homePdf: "12-mXo9QiLRJ9IY-ei-1mdrabXXg2y4Uk",   // Google Drive File ID — Tài liệu tổng hợp toàn bộ ERP
   homeVideo: "1r5jI7Nv9wIrNkMy9tku2ZAqw0TlNzgL-", // Google Drive File ID — Clip hướng dẫn đầy đủ tất cả functions
 };
+
+/**
+ * =====================================================================
+ * TÀI LIỆU CHUNG — Danh sách tài liệu tham khảo
+ * =====================================================================
+ * Mỗi item gồm:
+ *   id       — định danh duy nhất (không dấu, không khoảng trắng)
+ *   title    — Tiêu đề hiển thị
+ *   desc     — Mô tả ngắn (tuỳ chọn)
+ *   fileId   — Google Drive File ID (dùng cho pdf / pptx / xlsx / docx)
+ *   type     — Loại file: "pdf" | "pptx" | "xlsx" | "docx" | "link"
+ *              (mặc định: "pdf" nếu bỏ trống)
+ *   url      — URL ngoài (chỉ dùng khi type = "link")
+ *   category — Nhóm tài liệu (ví dụ: "Chính sách", "Quy trình", "Biểu mẫu")
+ *
+ * Cách lấy fileId từ Google Drive:
+ *   1. Mở file → Share → "Anyone with the link"
+ *   2. Copy URL: https://drive.google.com/file/d/FILE_ID/view
+ *   3. Dán FILE_ID vào trường fileId bên dưới
+ * =====================================================================
+ */
+export const documents = [
+  // ── Xóa các ví dụ bên dưới và thay bằng tài liệu thật ──
+
+  // PDF
+  // {
+  //   id: "quy-trinh-erp",
+  //   title: "Quy trình ERP tổng hợp",
+  //   desc: "Tài liệu hướng dẫn toàn bộ quy trình",
+  //   fileId: "GOOGLE_DRIVE_FILE_ID",
+  //   type: "pdf",
+  //   category: "Quy trình",
+  // },
+
+  // PowerPoint
+  // {
+  //   id: "slide-training",
+  //   title: "Slide Training ERP",
+  //   desc: "Bài thuyết trình đào tạo nội bộ",
+  //   fileId: "GOOGLE_DRIVE_FILE_ID",
+  //   type: "pptx",
+  //   category: "Đào tạo",
+  // },
+
+  // Excel
+  // {
+  //   id: "bieu-mau-so",
+  //   title: "Biểu mẫu Số liệu",
+  //   desc: "Template nhập liệu hàng tháng",
+  //   fileId: "GOOGLE_DRIVE_FILE_ID",
+  //   type: "xlsx",
+  //   category: "Biểu mẫu",
+  // },
+
+  // Word
+  // {
+  //   id: "chinh-sach-muahang",
+  //   title: "Chính sách Mua hàng",
+  //   desc: "Quy định nội bộ về quy trình mua hàng",
+  //   fileId: "GOOGLE_DRIVE_FILE_ID",
+  //   type: "docx",
+  //   category: "Chính sách",
+  // },
+
+  // Link ngoài
+  // {
+  //   id: "link-erp-portal",
+  //   title: "ERP Portal",
+  //   desc: "Truy cập hệ thống ERP trực tiếp",
+  //   type: "link",
+  //   url: "https://your-erp-portal.com",
+  //   category: "Hệ thống",
+  // },
+  {
+    id: "code_guidance",
+    title: "HƯỚNG DẪN MÃ CODE",
+    desc: "HƯỚNG DẪN VỀ MÃ CODE",
+    fileId: "1oYU55d09AOEz_NBgCVaW-QyCvWFx4SFv",
+    type: "xlsx",
+    category: "Quy định",
+  },
+  {
+    id: "erp_demo_flow",
+    title: "ERP DEMO FLOW",
+    desc: "QUY TRÌNH ERP THỬ NGHIỆM",
+    fileId: "1F8UKUPg5zE9uBcojkZgW99n79uuZZRAR",
+    type: "pdf",
+    category: "Quy trình",
+  },
+  {
+    id: "explain_mac",
+    title: "GIẢI THÍCH MAC",
+    desc: "GIẢI THÍCH VỀ MÃ MAC",
+    fileId: "1aDR8Jp_Nk4mfZRejqrXiUqtH4KAym2JW",
+    type: "docx",
+    category: "Giải thích",
+  },
+  {
+    id: "direct_delivery_guidance",
+    title: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHO",
+    desc: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHOHướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
+    fileId: "1qDimabt8D3VCwKuW2cr1Uomi8SGmaTMe",
+    type: "pptx",
+    category: "Hướng dẫn",
+  },
+];
+
 
 export const tabs = [
   // ─────────────────────────────────────────────

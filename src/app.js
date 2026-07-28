@@ -1,4 +1,4 @@
-import { tabs, siteConfig } from './config.js';
+import { tabs, siteConfig, documents } from './config.js';
 
 // ─── SVG Icons (line style, no color) ────────────────────
 const ICONS = {
@@ -20,21 +20,46 @@ const ICONS = {
   home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
   arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
   info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+  // File-type specific icons
+  pptx: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="9" cy="10" r="2.5"/><path d="M11.5 10h3"/><path d="M11.5 12.5h3"/></svg>`,
+  xlsx: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="12" y1="11" x2="12" y2="19"/></svg>`,
+  docx: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
   // Logo
   logo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
   // Welcome chips
   modules: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
   doc: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`,
   play: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>`,
+  // Documents tab
+  library: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  file: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+  external: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
+  tag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`,
 };
 
 // ─── Helpers ──────────────────────────────────────────────
 function gdrivePDF(id)      { return `https://drive.google.com/file/d/${id}/preview`; }
 function gdriveVideo(id)    { return `https://drive.google.com/file/d/${id}/preview`; }
 function gdriveDownload(id) { return `https://drive.google.com/uc?export=download&id=${id}`; }
+// Google Drive preview works for PDF, PPTX, XLSX, DOCX using the same URL
+function gdrivePreview(id)  { return `https://drive.google.com/file/d/${id}/preview`; }
+
+// ─── File Type Config ─────────────────────────────────────
+const FILE_TYPES = {
+  pdf:  { label: 'PDF',  icon: () => ICONS.pdf,      colorClass: 'ft-pdf'  },
+  pptx: { label: 'PPTX', icon: () => ICONS.pptx,     colorClass: 'ft-pptx' },
+  xlsx: { label: 'XLSX', icon: () => ICONS.xlsx,     colorClass: 'ft-xlsx' },
+  docx: { label: 'DOCX', icon: () => ICONS.docx,     colorClass: 'ft-docx' },
+  link: { label: 'Link', icon: () => ICONS.external,  colorClass: 'ft-link' },
+};
+
+function getFileType(doc) {
+  return FILE_TYPES[doc.type] || FILE_TYPES.pdf;
+}
 
 // ─── State ────────────────────────────────────────────────
 let activeTabId = null;
+let activeDocId = null;
 let sidebarOpen = false;
 
 // ─── Build Sidebar ────────────────────────────────────────
@@ -55,6 +80,20 @@ function buildSidebar() {
   homeBtn.addEventListener('click', () => showHome());
   homeItem.appendChild(homeBtn);
   nav.appendChild(homeItem);
+
+  // ── Documents button ──
+  const docsItem = document.createElement('div');
+  docsItem.className = 'nav-item';
+  const docsBtn = document.createElement('button');
+  docsBtn.className = 'nav-btn';
+  docsBtn.id = 'nav-documents';
+  docsBtn.innerHTML = `
+    <span class="nav-icon">${ICONS.library}</span>
+    <span class="nav-label">Tài liệu</span>
+  `;
+  docsBtn.addEventListener('click', () => showDocumentsPage());
+  docsItem.appendChild(docsBtn);
+  nav.appendChild(docsItem);
 
   // Divider
   const divider = document.createElement('div');
@@ -125,6 +164,187 @@ function toggleSubNav(item) {
   });
   item.classList.toggle('open', !isOpen);
   item.querySelector('.sub-nav')?.classList.toggle('open', !isOpen);
+}
+
+// ─── Documents Page ──────────────────────────────────────
+function showDocumentsPage() {
+  // Reset all active states
+  document.querySelectorAll('.nav-btn, .sub-btn').forEach((el) => el.classList.remove('active'));
+  document.getElementById('nav-documents')?.classList.add('active');
+  activeTabId = null;
+
+  // Update header
+  document.getElementById('page-title').textContent = 'Tài liệu';
+  document.getElementById('page-subtitle').textContent = 'Tài liệu tham khảo nội bộ';
+  document.getElementById('breadcrumb').innerHTML =
+    '<span>ERP Guidance</span><span class="breadcrumb-sep">/</span><span>Tài liệu</span>';
+
+  document.getElementById('welcome-screen').style.display = 'none';
+  const container = document.getElementById('content-container');
+  container.style.display = 'flex';
+
+  const isEmpty = !documents || documents.length === 0;
+
+  // ── Group by category ──
+  const grouped = {};
+  if (!isEmpty) {
+    documents.forEach((doc) => {
+      const cat = doc.category || 'Khác';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(doc);
+    });
+  }
+
+  // Set default active doc
+  activeDocId = (!isEmpty) ? documents[0].id : null;
+
+  const firstDoc = (!isEmpty) ? documents[0] : null;
+  const hasFirstFile = firstDoc && firstDoc.fileId && firstDoc.fileId.trim() !== '';
+
+  container.innerHTML = `
+    <div class="docs-layout" id="docs-layout">
+
+      <!-- Left: list -->
+      <div class="docs-sidebar">
+        <div class="docs-sidebar-header">
+          <span class="docs-sidebar-title">${ICONS.library} Danh sách tài liệu</span>
+          <span class="docs-count">${isEmpty ? 0 : documents.length} tài liệu</span>
+        </div>
+
+        <div class="docs-list" id="docs-list">
+          ${
+            isEmpty
+              ? `<div class="docs-empty">
+                  <div class="docs-empty-icon">${ICONS.library}</div>
+                  <div class="docs-empty-title">Chưa có tài liệu</div>
+                  <div class="docs-empty-text">Thêm tài liệu vào mảng <code>documents</code> trong <code>config.js</code></div>
+                </div>`
+              : Object.entries(grouped).map(([cat, items]) => `
+                  <div class="docs-category">
+                    <div class="docs-category-label">${ICONS.tag} ${cat}</div>
+                    ${items.map((doc) => {
+                      const ft = getFileType(doc);
+                      return `
+                      <button class="docs-item ${doc.id === activeDocId ? 'active' : ''}"
+                              id="docitem-${doc.id}"
+                              data-doc-id="${doc.id}">
+                        <div class="docs-item-icon ${ft.colorClass}">${ft.icon()}</div>
+                        <div class="docs-item-body">
+                          <div class="docs-item-title">${doc.title}</div>
+                          ${doc.desc ? `<div class="docs-item-desc">${doc.desc}</div>` : ''}
+                        </div>
+                        <span class="docs-item-badge ${ft.colorClass}">${ft.label}</span>
+                        <div class="docs-item-arrow">${ICONS.chevron}</div>
+                      </button>`;
+                    }).join('')}
+                  </div>
+                `).join('')
+          }
+        </div>
+      </div>
+
+      <!-- Right: preview -->
+      <div class="docs-preview" id="docs-preview">
+        ${
+          isEmpty
+            ? `<div class="docs-preview-empty">
+                <div class="docs-preview-empty-icon">${ICONS.pdf}</div>
+                <div class="docs-preview-empty-title">Chọn một tài liệu để xem</div>
+                <div class="docs-preview-empty-text">Tài liệu sẽ hiển thị ở đây</div>
+               </div>`
+            : renderDocPreview(firstDoc)
+        }
+      </div>
+
+    </div>
+  `;
+
+  // Attach click events
+  container.querySelectorAll('.docs-item').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const docId = btn.dataset.docId;
+      const doc = documents.find((d) => d.id === docId);
+      if (!doc) return;
+      activeDocId = docId;
+
+      // Update active state in list
+      container.querySelectorAll('.docs-item').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Update preview
+      document.getElementById('docs-preview').innerHTML = renderDocPreview(doc);
+    });
+  });
+
+  if (window.innerWidth <= 768) closeMobileSidebar();
+}
+
+function renderDocPreview(doc) {
+  if (!doc) return '';
+  const hasFile = doc.fileId && doc.fileId.trim() !== '';
+  const ft = getFileType(doc);
+  const isLink = doc.type === 'link';
+
+  if (isLink && doc.url) {
+    return `
+      <div class="docs-preview-header">
+        <div class="docs-preview-title-group">
+          <div class="docs-preview-icon ${ft.colorClass}">${ft.icon()}</div>
+          <div>
+            <div class="docs-preview-title">${doc.title}</div>
+            ${doc.desc ? `<div class="docs-preview-subtitle">${doc.desc}</div>` : ''}
+          </div>
+        </div>
+        <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn-download" id="btn-link-${doc.id}">
+          ${ICONS.external} Mở liên kết
+        </a>
+      </div>
+      <div class="docs-preview-body">
+        <div class="docs-preview-empty">
+          <div class="docs-preview-empty-icon">${ft.icon()}</div>
+          <div class="docs-preview-empty-title">${doc.title}</div>
+          <div class="docs-preview-empty-text">Nhấn <strong>Mở liên kết</strong> để xem tài liệu</div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="docs-preview-header">
+      <div class="docs-preview-title-group">
+        <div class="docs-preview-icon ${ft.colorClass}">${ft.icon()}</div>
+        <div>
+          <div class="docs-preview-title">
+            ${doc.title}
+            <span class="docs-preview-badge ${ft.colorClass}">${ft.label}</span>
+          </div>
+          ${doc.desc ? `<div class="docs-preview-subtitle">${doc.desc}</div>` : ''}
+        </div>
+      </div>
+      ${hasFile ? `
+        <a href="${gdriveDownload(doc.fileId)}"
+           class="btn-download"
+           target="_blank"
+           rel="noopener noreferrer"
+           id="btn-doc-download-${doc.id}">
+          ${ICONS.download} Tải xuống
+        </a>` : ''}
+    </div>
+    <div class="docs-preview-body">
+      ${hasFile
+        ? `<iframe class="docs-frame"
+               src="${gdrivePreview(doc.fileId)}"
+               allow="autoplay"
+               loading="lazy"
+               title="${doc.title}"></iframe>`
+        : `<div class="docs-preview-empty">
+               <div class="docs-preview-empty-icon ${ft.colorClass}">${ft.icon()}</div>
+               <div class="docs-preview-empty-title">Chưa có file tài liệu</div>
+               <div class="docs-preview-empty-text">Điền <code>fileId</code> trong <code>config.js</code> để hiển thị</div>
+             </div>`
+      }
+    </div>
+  `;
 }
 
 // ─── Set Active Tab ───────────────────────────────────────
