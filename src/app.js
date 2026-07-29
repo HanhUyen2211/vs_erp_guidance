@@ -1,5 +1,17 @@
 import { tabs, siteConfig, documents } from './config.js';
 
+// ─── Danh sách bộ phận ───────────────────────────────────
+const DEPARTMENTS = [
+  'Kế toán', 'Mua hàng', 'Bán hàng', 'Sản xuất',
+  'Kho', 'QC', 'Nhân sự', 'Quản lý', 'Tiến độ',
+];
+
+// ─── Danh sách module cho feedback ───────────────────────
+const FEEDBACK_MODULES = [
+  'Login', 'Item Master', 'BOM', 'Sales Order',
+  'Production Order', 'Purchase', 'Delivery', 'Invoice', 'Others',
+];
+
 // ─── SVG Icons (line style, no color) ────────────────────
 const ICONS = {
   // Sidebar module icons
@@ -35,6 +47,13 @@ const ICONS = {
   file: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
   external: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
   tag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`,
+  // Feedback
+  feedback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  send: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  alertCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`,
 };
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -94,6 +113,21 @@ function buildSidebar() {
   docsBtn.addEventListener('click', () => showDocumentsPage());
   docsItem.appendChild(docsBtn);
   nav.appendChild(docsItem);
+
+  // ── Feedback button ──
+  const feedbackItem = document.createElement('div');
+  feedbackItem.className = 'nav-item';
+  const feedbackBtn = document.createElement('button');
+  feedbackBtn.className = 'nav-btn nav-btn--feedback';
+  feedbackBtn.id = 'nav-feedback';
+  feedbackBtn.innerHTML = `
+    <span class="nav-icon">${ICONS.feedback}</span>
+    <span class="nav-label">Phản hồi</span>
+    <span class="feedback-badge">Góp ý</span>
+  `;
+  feedbackBtn.addEventListener('click', () => showFeedbackPage());
+  feedbackItem.appendChild(feedbackBtn);
+  nav.appendChild(feedbackItem);
 
   // Divider
   const divider = document.createElement('div');
@@ -681,6 +715,333 @@ function closeMobileSidebar() {
   sidebarOpen = false;
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ─── Feedback Page ────────────────────────────────────────
+function showFeedbackPage() {
+  // Reset active states
+  document.querySelectorAll('.nav-btn, .sub-btn').forEach((el) => el.classList.remove('active'));
+  document.getElementById('nav-feedback')?.classList.add('active');
+  activeTabId = null;
+
+  // Update header
+  document.getElementById('page-title').textContent = 'Phản hồi Hệ thống';
+  document.getElementById('page-subtitle').textContent = 'Gửi ý kiến, yêu cầu thay đổi về hệ thống ERP';
+  document.getElementById('breadcrumb').innerHTML =
+    '<span>ERP Guidance</span><span class="breadcrumb-sep">/</span><span>Phản hồi</span>';
+
+  document.getElementById('welcome-screen').style.display = 'none';
+  const container = document.getElementById('content-container');
+  container.style.display = 'flex';
+
+  // Chips HTML cho modules
+  const moduleChips = FEEDBACK_MODULES.map((m) =>
+    `<button type="button" class="module-chip" data-module="${m}">${m}</button>`
+  ).join('');
+
+  container.innerHTML = `
+    <div class="feedback-wrapper" id="feedback-wrapper">
+
+      <div class="feedback-intro">
+        <div class="feedback-intro-icon">${ICONS.feedback}</div>
+        <div>
+          <div class="feedback-intro-title">Ý kiến của bạn rất quan trọng</div>
+          <div class="feedback-intro-desc">Điền thông tin bên dưới để gửi phản hồi về hệ thống ERP. Chúng tôi sẽ xem xét và phản hồi sớm nhất có thể.</div>
+        </div>
+      </div>
+
+      <form class="feedback-form" id="feedback-form" novalidate>
+
+        <!-- Bộ phận -->
+        <div class="feedback-field" id="field-department">
+          <label class="feedback-label" for="fb-department">
+            Bộ phận của bạn <span class="required">*</span>
+          </label>
+          <div class="feedback-select-wrap">
+            <select class="feedback-select" id="fb-department" name="department" required>
+              <option value="">— Chọn bộ phận —</option>
+              ${DEPARTMENTS.map((d) => `<option value="${d}">${d}</option>`).join('')}
+            </select>
+            <span class="select-arrow">${ICONS.chevron}</span>
+          </div>
+          <span class="feedback-error" id="err-department"></span>
+        </div>
+
+        <!-- Module -->
+        <div class="feedback-field" id="field-modules">
+          <label class="feedback-label">
+            Module liên quan <span class="required">*</span>
+            <span class="feedback-hint">Có thể chọn nhiều</span>
+          </label>
+          <div class="module-chips" id="module-chips">
+            ${moduleChips}
+          </div>
+          <span class="feedback-error" id="err-modules"></span>
+        </div>
+
+        <!-- Nội dung -->
+        <div class="feedback-field" id="field-content">
+          <label class="feedback-label" for="fb-content">
+            Nội dung ý kiến / Yêu cầu thay đổi <span class="required">*</span>
+          </label>
+          <textarea
+            class="feedback-textarea"
+            id="fb-content"
+            name="content"
+            placeholder="Mô tả chi tiết vấn đề bạn gặp phải hoặc tính năng bạn muốn thay đổi..."
+            rows="6"
+            required
+          ></textarea>
+          <div class="textarea-counter"><span id="char-count">0</span> / 2000 ký tự</div>
+          <span class="feedback-error" id="err-content"></span>
+        </div>
+
+        <!-- Hình ảnh -->
+        <div class="feedback-field">
+          <label class="feedback-label">
+            Hình ảnh / Tệp đính kèm
+            <span class="feedback-hint">Tùy chọn — tối đa 3 ảnh, mỗi ảnh ≤ 4MB</span>
+          </label>
+          <div class="file-upload-area" id="file-upload-area">
+            <input type="file" id="fb-images" name="images" accept="image/*" multiple class="file-input" />
+            <div class="file-upload-placeholder" id="file-placeholder">
+              <div class="file-upload-icon">${ICONS.image}</div>
+              <div class="file-upload-text">Kéo thả ảnh vào đây hoặc <span class="file-browse">chọn file</span></div>
+              <div class="file-upload-hint">PNG, JPG, WEBP — tối đa 3 ảnh</div>
+            </div>
+            <div class="file-preview-grid" id="file-preview-grid"></div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="feedback-actions">
+          <button type="button" class="btn-reset" id="btn-reset">Xóa form</button>
+          <button type="submit" class="btn-send" id="btn-send">
+            <span class="btn-send-icon">${ICONS.send}</span>
+            <span class="btn-send-label">Gửi phản hồi</span>
+            <span class="btn-send-spinner" id="send-spinner"></span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  `;
+
+  // ── Module chip toggle ──
+  const chipsEl = document.getElementById('module-chips');
+  chipsEl.querySelectorAll('.module-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('active');
+      document.getElementById('err-modules').textContent = '';
+    });
+  });
+
+  // ── Char counter ──
+  const textarea = document.getElementById('fb-content');
+  const charCount = document.getElementById('char-count');
+  textarea.addEventListener('input', () => {
+    const len = textarea.value.length;
+    charCount.textContent = len;
+    charCount.style.color = len > 1900 ? 'var(--warning-text)' : '';
+    if (len > 0) document.getElementById('err-content').textContent = '';
+  });
+
+  // ── File upload ──
+  const fileInput = document.getElementById('fb-images');
+  const filePreviewGrid = document.getElementById('file-preview-grid');
+  const filePlaceholder = document.getElementById('file-placeholder');
+  let selectedFiles = [];
+
+  function renderFilePreviews() {
+    filePreviewGrid.innerHTML = '';
+    if (selectedFiles.length === 0) {
+      filePlaceholder.style.display = 'flex';
+      return;
+    }
+    filePlaceholder.style.display = 'none';
+    selectedFiles.forEach((file, idx) => {
+      const url = URL.createObjectURL(file);
+      const item = document.createElement('div');
+      item.className = 'file-preview-item';
+      item.innerHTML = `
+        <img src="${url}" alt="${file.name}" class="file-preview-img" />
+        <div class="file-preview-name">${file.name}</div>
+        <button type="button" class="file-preview-remove" data-idx="${idx}">${ICONS.trash}</button>
+      `;
+      item.querySelector('.file-preview-remove').addEventListener('click', () => {
+        selectedFiles.splice(idx, 1);
+        renderFilePreviews();
+      });
+      filePreviewGrid.appendChild(item);
+    });
+  }
+
+  const uploadArea = document.getElementById('file-upload-area');
+  uploadArea.addEventListener('click', (e) => {
+    if (!e.target.closest('.file-preview-remove')) fileInput.click();
+  });
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', () => {
+    addFiles(Array.from(fileInput.files));
+    fileInput.value = '';
+  });
+
+  function addFiles(newFiles) {
+    const images = newFiles.filter((f) => f.type.startsWith('image/'));
+    const toAdd = images.slice(0, 3 - selectedFiles.length);
+    const oversized = toAdd.filter((f) => f.size > 4 * 1024 * 1024);
+    if (oversized.length) { showToast('Mỗi ảnh tối đa 4MB!', 'error'); return; }
+    selectedFiles = [...selectedFiles, ...toAdd].slice(0, 3);
+    renderFilePreviews();
+  }
+
+  // ── Reset ──
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    document.getElementById('feedback-form').reset();
+    chipsEl.querySelectorAll('.module-chip').forEach((c) => c.classList.remove('active'));
+    charCount.textContent = '0';
+    selectedFiles = [];
+    renderFilePreviews();
+    ['err-department', 'err-modules', 'err-content'].forEach((id) => {
+      document.getElementById(id).textContent = '';
+    });
+    ['field-department', 'field-modules', 'field-content'].forEach((id) => {
+      document.getElementById(id)?.classList.remove('has-error');
+    });
+  });
+
+  // ── Submit ──
+  document.getElementById('feedback-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitFeedback(selectedFiles);
+  });
+
+  if (window.innerWidth <= 768) closeMobileSidebar();
+}
+
+// ─── Submit Feedback ──────────────────────────────────────
+async function submitFeedback(selectedFiles) {
+  // ── Validate ──
+  let valid = true;
+  const dept = document.getElementById('fb-department').value;
+  const content = document.getElementById('fb-content').value.trim();
+  const activeChips = [...document.querySelectorAll('.module-chip.active')].map((c) => c.dataset.module);
+
+  if (!dept) {
+    document.getElementById('err-department').textContent = 'Vui lòng chọn bộ phận.';
+    document.getElementById('field-department')?.classList.add('has-error');
+    valid = false;
+  } else {
+    document.getElementById('err-department').textContent = '';
+    document.getElementById('field-department')?.classList.remove('has-error');
+  }
+
+  if (activeChips.length === 0) {
+    document.getElementById('err-modules').textContent = 'Vui lòng chọn ít nhất một module.';
+    document.getElementById('field-modules')?.classList.add('has-error');
+    valid = false;
+  } else {
+    document.getElementById('err-modules').textContent = '';
+    document.getElementById('field-modules')?.classList.remove('has-error');
+  }
+
+  if (!content) {
+    document.getElementById('err-content').textContent = 'Vui lòng nhập nội dung phản hồi.';
+    document.getElementById('field-content')?.classList.add('has-error');
+    valid = false;
+  } else {
+    document.getElementById('err-content').textContent = '';
+    document.getElementById('field-content')?.classList.remove('has-error');
+  }
+
+  if (!valid) return;
+
+  // ── Loading state ──
+  const btnSend = document.getElementById('btn-send');
+  btnSend.disabled = true;
+  btnSend.classList.add('loading');
+
+  // ── Convert images to base64 ──
+  const imagesBase64 = [];
+  for (const file of selectedFiles) {
+    const b64 = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+    imagesBase64.push({ name: file.name, data: b64 });
+  }
+
+  // ── Build payload ──
+  const payload = {
+    timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+    department: dept,
+    modules: activeChips.join(', '),
+    content: content,
+    images: imagesBase64,
+  };
+
+  // ── Check webhook URL ──
+  const webhookUrl = siteConfig.feedbackWebhookUrl;
+  if (!webhookUrl || webhookUrl.trim() === '') {
+    // Demo mode: log to console and show success (for testing before setup)
+    console.log('[ERP Feedback] Webhook chưa cấu hình. Dữ liệu phản hồi:', payload);
+    btnSend.disabled = false;
+    btnSend.classList.remove('loading');
+    showToast('⚙️ Webhook chưa cấu hình — xem SETUP_FEEDBACK.md để thiết lập Google Sheets.', 'warning', 6000);
+    return;
+  }
+
+  // ── Send ──
+  try {
+    // Google Apps Script Web App yêu cầu no-cors mode
+    // (không đọc được response body nhưng request vẫn được xử lý phía server)
+    await fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    // no-cors không throw lỗi nếu network OK → assume success
+    document.getElementById('btn-reset').click();
+    showToast('✅ Phản hồi đã được gửi thành công! Cảm ơn bạn.', 'success', 5000);
+  } catch (err) {
+    console.error('[ERP Feedback] Lỗi gửi phản hồi:', err);
+    showToast('❌ Gửi thất bại. Vui lòng thử lại hoặc liên hệ Admin.', 'error', 5000);
+  } finally {
+    btnSend.disabled = false;
+    btnSend.classList.remove('loading');
+  }
+}
+
+// ─── Toast Notification ───────────────────────────────────
+function showToast(message, type = 'success', duration = 4000) {
+  // Remove existing toast
+  document.getElementById('erp-toast')?.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'erp-toast';
+  toast.className = `erp-toast erp-toast--${type}`;
+  toast.innerHTML = `
+    <span class="toast-message">${message}</span>
+    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  document.body.appendChild(toast);
+
+  // Animate in
+  requestAnimationFrame(() => toast.classList.add('show'));
+
+  // Auto remove
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 350);
+  }, duration);
 }
 
 // ─── Init ─────────────────────────────────────────────────

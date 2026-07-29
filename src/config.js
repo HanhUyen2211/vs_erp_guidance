@@ -28,6 +28,10 @@ export const siteConfig = {
   // Tài liệu tổng quan & clip full tất cả functions (hiển thị ở trang Home)
   homePdf: "12-mXo9QiLRJ9IY-ei-1mdrabXXg2y4Uk",   // Google Drive File ID — Tài liệu tổng hợp toàn bộ ERP
   homeVideo: "1cAoYtNfdkxl9hm3NKJkwsQI4W58K2r7t", // Google Drive File ID — Clip hướng dẫn đầy đủ tất cả functions
+
+  // ── Phản hồi: Paste URL Google Apps Script Web App vào đây ──────────────
+  // Xem hướng dẫn setup trong file SETUP_FEEDBACK.md
+  feedbackWebhookUrl: "https://script.google.com/macros/s/AKfycbwMj0ahepKHiB9FLmNEaHAFZy8F3jV2kzTDzBGSxwotsN5QcygUXrMxD0Lj1PGvjyw1Ww/exec", // Ví dụ: "https://script.google.com/macros/s/AKfyc.../exec"
 };
 
 /**
