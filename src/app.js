@@ -1044,8 +1044,42 @@ function showToast(message, type = 'success', duration = 4000) {
   }, duration);
 }
 
+// ─── Theme Toggle ─────────────────────────────────────────
+const ICON_SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.78" y2="4.22"/></svg>`;
+const ICON_MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>`;
+
+function applyTheme(isDark) {
+  if (isDark) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  const icon = document.getElementById('theme-toggle-icon');
+  const label = document.getElementById('theme-toggle-label');
+  if (icon) icon.innerHTML = isDark ? ICON_MOON : ICON_SUN;
+  if (label) label.textContent = isDark ? 'Giao diện sáng' : 'Giao diện tối';
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('erp-theme');
+  // Default is light (null or 'light' = light)
+  const isDark = saved === 'dark';
+  applyTheme(isDark);
+
+  const btn = document.getElementById('theme-toggle');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const currentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next = !currentlyDark;
+      localStorage.setItem('erp-theme', next ? 'dark' : 'light');
+      applyTheme(next);
+    });
+  }
+}
+
 // ─── Init ─────────────────────────────────────────────────
 export function init() {
+  initTheme();
   buildSidebar();
   renderWelcome();
 
