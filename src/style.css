@@ -36,9 +36,14 @@
   --transition: 0.18s ease;
 
   --nav-btn-color: #374151;
+  --nav-btn-hover-color: #111827;
   --scrollbar-thumb: #d1d5db;
   --made-by-color: #6b7280;
   --sidebar-shadow: 0 0 20px rgba(0,0,0,0.06);
+
+  /* Admin notice (light) */
+  --admin-notice-text: #374151;
+  --admin-notice-strong: #111827;
 }
 
 /* ── Dark Theme ── */
@@ -71,9 +76,14 @@
   --transition: 0.18s ease;
 
   --nav-btn-color: #c8d4e8;
+  --nav-btn-hover-color: #ffffff;
   --scrollbar-thumb: #252d3d;
   --made-by-color: #ffffff;
   --sidebar-shadow: none;
+
+  /* Admin notice (dark) */
+  --admin-notice-text: #b0bcce;
+  --admin-notice-strong: #ffffff;
 }
 
 /* ── Theme Toggle Button ── */
@@ -266,7 +276,7 @@ body {
 
 .nav-btn:hover {
   background: var(--bg-hover);
-  color: #ffffff;
+  color: var(--nav-btn-hover-color);
 }
 
 .nav-btn.active {
@@ -762,7 +772,7 @@ body {
   border: 1px solid rgba(59, 113, 240, 0.25);
   border-radius: var(--radius-sm);
   font-size: 13px;
-  color: #b0bcce;
+  color: var(--admin-notice-text);
   line-height: 1.6;
 }
 
@@ -775,7 +785,7 @@ body {
 }
 
 .admin-notice strong {
-  color: #ffffff;
+  color: var(--admin-notice-strong);
   font-weight: 600;
 }
 
@@ -1326,25 +1336,49 @@ body {
 
 /* ── File type color tokens ── */
 :root {
-  --ft-pdf-bg:   rgba(226, 74,  74,  0.12);
-  --ft-pdf-bdr:  rgba(226, 74,  74,  0.30);
-  --ft-pdf-clr:  #e24a4a;
+  /* Light theme — slightly deeper for legibility on white */
+  --ft-pdf-bg:   rgba(220, 53,  53,  0.10);
+  --ft-pdf-bdr:  rgba(220, 53,  53,  0.28);
+  --ft-pdf-clr:  #c0392b;
 
-  --ft-pptx-bg:  rgba(212, 70,  14,  0.12);
-  --ft-pptx-bdr: rgba(212, 70,  14,  0.30);
-  --ft-pptx-clr: #d4460e;
+  --ft-pptx-bg:  rgba(200, 60,  10,  0.10);
+  --ft-pptx-bdr: rgba(200, 60,  10,  0.28);
+  --ft-pptx-clr: #b83c0a;
 
-  --ft-xlsx-bg:  rgba(26,  127, 75,  0.12);
-  --ft-xlsx-bdr: rgba(26,  127, 75,  0.30);
-  --ft-xlsx-clr: #1a7f4b;
+  --ft-xlsx-bg:  rgba(22,  108, 60,  0.10);
+  --ft-xlsx-bdr: rgba(22,  108, 60,  0.28);
+  --ft-xlsx-clr: #166534;
 
-  --ft-docx-bg:  rgba(43,  94,  184, 0.14);
-  --ft-docx-bdr: rgba(43,  94,  184, 0.32);
-  --ft-docx-clr: #4a80e0;
+  --ft-docx-bg:  rgba(37,  80,  180, 0.12);
+  --ft-docx-bdr: rgba(37,  80,  180, 0.30);
+  --ft-docx-clr: #2563eb;
 
-  --ft-link-bg:  rgba(124, 92,  191, 0.12);
-  --ft-link-bdr: rgba(124, 92,  191, 0.30);
-  --ft-link-clr: #9b72e8;
+  --ft-link-bg:  rgba(109, 70,  180, 0.10);
+  --ft-link-bdr: rgba(109, 70,  180, 0.28);
+  --ft-link-clr: #7c3aed;
+}
+
+/* Dark theme — brighter, more vibrant for dark backgrounds */
+[data-theme="dark"] {
+  --ft-pdf-bg:   rgba(226, 74,  74,  0.14);
+  --ft-pdf-bdr:  rgba(226, 74,  74,  0.32);
+  --ft-pdf-clr:  #f07070;
+
+  --ft-pptx-bg:  rgba(230, 100, 30,  0.14);
+  --ft-pptx-bdr: rgba(230, 100, 30,  0.32);
+  --ft-pptx-clr: #f08040;
+
+  --ft-xlsx-bg:  rgba(46,  195, 110, 0.12);
+  --ft-xlsx-bdr: rgba(46,  195, 110, 0.30);
+  --ft-xlsx-clr: #34d399;
+
+  --ft-docx-bg:  rgba(80,  140, 255, 0.14);
+  --ft-docx-bdr: rgba(80,  140, 255, 0.32);
+  --ft-docx-clr: #6ab0ff;
+
+  --ft-link-bg:  rgba(160, 120, 240, 0.14);
+  --ft-link-bdr: rgba(160, 120, 240, 0.32);
+  --ft-link-clr: #b08aff;
 }
 
 /* Icon coloring per type */
