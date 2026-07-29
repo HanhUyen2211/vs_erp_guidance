@@ -127,6 +127,14 @@ export const documents = [
     category: "Giải thích",
   },
   {
+    id: "explain_stock_types",
+    title: "GIẢI THÍCH LOẠI TỒN KHO",
+    desc: "GIẢI THÍCH VỀ CÁC LOẠI TỒN KHO",
+    fileId: "1mQJUpNagnQFauy0i38lLNI8QVZIfQWLy",
+    type: "docx",
+    category: "Giải thích",
+  },
+  {
     id: "direct_delivery_guidance",
     title: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHO",
     desc: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHOHướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
