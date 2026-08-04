@@ -138,6 +138,14 @@ export const documents = [
     type: "docx",
     category: "Giải thích",
   },
+    {
+    id: "explain_prod_orders_types",
+    title: "GIẢI THÍCH CÁC LOẠI LỆNH SẢN XUẤT",
+    desc: "GIẢI THÍCH VỀ CÁC LOẠI LỆNH SẢN XUẤT",
+    fileId: "1I_P88V0jZuMmKB7yePR5jW0Z1QjJ696b",
+    type: "docx",
+    category: "Giải thích",
+  },
   {
     id: "direct_delivery_guidance",
     title: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHO",
