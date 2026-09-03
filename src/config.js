@@ -149,9 +149,17 @@ export const documents = [
   {
     id: "direct_delivery_guidance",
     title: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHO",
-    desc: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHOHướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
+    desc: "Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
     fileId: "1qDimabt8D3VCwKuW2cr1Uomi8SGmaTMe",
     type: "pptx",
+    category: "Hướng dẫn",
+  },
+    {
+    id: "scaning_wo_guidance",
+    title: "HƯỚNG DẪN SỬ DỤNG TERMINAL",
+    desc: "Hướng dẫn sử dụng terminal để scan lệnh sản xuất",
+    fileId: "11LWYex7HOOXuqcZEAr98_OgKxzxj7oE7",
+    type: "pdf",
     category: "Hướng dẫn",
   },
 ];
