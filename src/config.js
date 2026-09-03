@@ -154,11 +154,19 @@ export const documents = [
     type: "pptx",
     category: "Hướng dẫn",
   },
-    {
+  {
     id: "scaning_wo_guidance",
     title: "HƯỚNG DẪN SỬ DỤNG TERMINAL",
     desc: "Hướng dẫn sử dụng terminal để scan lệnh sản xuất",
     fileId: "11LWYex7HOOXuqcZEAr98_OgKxzxj7oE7",
+    type: "pdf",
+    category: "Hướng dẫn",
+  },
+    {
+    id: "generate_wo_guidance",
+    title: "HƯỚNG DẪN TẠO LỆNH SẢN XUẤT",
+    desc: "Hướng dẫn tạo lệnh sản xuất",
+    fileId: "1OlW6869fM2aBt2By1fGelNeuRq0etIxe",
     type: "pdf",
     category: "Hướng dẫn",
   },
