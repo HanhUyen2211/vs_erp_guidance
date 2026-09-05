@@ -36,6 +36,29 @@ export const siteConfig = {
 
 /**
  * =====================================================================
+ * NHÓM TAB TÀI LIỆU
+ * =====================================================================
+ */
+export const documentSections = [
+  {
+    id: "rules-catalog",
+    label: "Quy định & Danh mục",
+    desc: "Quy định và danh mục dữ liệu nền",
+  },
+  {
+    id: "operation-guides",
+    label: "Hướng dẫn thao tác",
+    desc: "Các hướng dẫn thực hiện nghiệp vụ",
+  },
+  {
+    id: "references",
+    label: "Tài liệu tham khảo",
+    desc: "Quy trình và giải thích khái niệm",
+  },
+];
+
+/**
+ * =====================================================================
  * TÀI LIỆU CHUNG — Danh sách tài liệu tham khảo
  * =====================================================================
  * Mỗi item gồm:
@@ -43,10 +66,11 @@ export const siteConfig = {
  *   title    — Tiêu đề hiển thị
  *   desc     — Mô tả ngắn (tuỳ chọn)
  *   fileId   — Google Drive File ID (dùng cho pdf / pptx / xlsx / docx)
- *   type     — Loại file: "pdf" | "pptx" | "xlsx" | "docx" | "link"
+ *   type     — Loại file: "pdf" | "pptx" | "xlsx" | "docx" | "video" | "link"
  *              (mặc định: "pdf" nếu bỏ trống)
  *   url      — URL ngoài (chỉ dùng khi type = "link")
  *   category — Nhóm tài liệu (ví dụ: "Chính sách", "Quy trình", "Biểu mẫu")
+ *   sectionId — Tab tài liệu: "rules-catalog" | "operation-guides" | "references"
  *
  * Cách lấy fileId từ Google Drive:
  *   1. Mở file → Share → "Anyone with the link"
@@ -55,120 +79,95 @@ export const siteConfig = {
  * =====================================================================
  */
 export const documents = [
-  // ── Xóa các ví dụ bên dưới và thay bằng tài liệu thật ──
-
-  // PDF
-  // {
-  //   id: "quy-trinh-erp",
-  //   title: "Quy trình ERP tổng hợp",
-  //   desc: "Tài liệu hướng dẫn toàn bộ quy trình",
-  //   fileId: "GOOGLE_DRIVE_FILE_ID",
-  //   type: "pdf",
-  //   category: "Quy trình",
-  // },
-
-  // PowerPoint
-  // {
-  //   id: "slide-training",
-  //   title: "Slide Training ERP",
-  //   desc: "Bài thuyết trình đào tạo nội bộ",
-  //   fileId: "GOOGLE_DRIVE_FILE_ID",
-  //   type: "pptx",
-  //   category: "Đào tạo",
-  // },
-
-  // Excel
-  // {
-  //   id: "bieu-mau-so",
-  //   title: "Biểu mẫu Số liệu",
-  //   desc: "Template nhập liệu hàng tháng",
-  //   fileId: "GOOGLE_DRIVE_FILE_ID",
-  //   type: "xlsx",
-  //   category: "Biểu mẫu",
-  // },
-
-  // Word
-  // {
-  //   id: "chinh-sach-muahang",
-  //   title: "Chính sách Mua hàng",
-  //   desc: "Quy định nội bộ về quy trình mua hàng",
-  //   fileId: "GOOGLE_DRIVE_FILE_ID",
-  //   type: "docx",
-  //   category: "Chính sách",
-  // },
-
-  // Link ngoài
-  // {
-  //   id: "link-erp-portal",
-  //   title: "ERP Portal",
-  //   desc: "Truy cập hệ thống ERP trực tiếp",
-  //   type: "link",
-  //   url: "https://your-erp-portal.com",
-  //   category: "Hệ thống",
-  // },
   {
     id: "code_guidance",
-    title: "HƯỚNG DẪN MÃ CODE",
-    desc: "HƯỚNG DẪN VỀ MÃ CODE",
+    title: "Hướng dẫn mã code",
+    desc: "Quy định về mã code",
     fileId: "1oYU55d09AOEz_NBgCVaW-QyCvWFx4SFv",
     type: "xlsx",
     category: "Quy định",
+    sectionId: "rules-catalog",
   },
   {
-    id: "erp_demo_flow",
-    title: "ERP DEMO FLOW",
-    desc: "QUY TRÌNH ERP THỬ NGHIỆM",
-    fileId: "1F8UKUPg5zE9uBcojkZgW99n79uuZZRAR",
-    type: "pdf",
-    category: "Quy trình",
+    id: "id_list",
+    title: "Danh sách ID",
+    desc: "Thêm mới",
+    fileId: "",
+    type: "xlsx",
+    category: "Thêm mới",
+    sectionId: "rules-catalog",
   },
   {
-    id: "explain_mac",
-    title: "GIẢI THÍCH MAC",
-    desc: "GIẢI THÍCH VỀ MÃ MAC",
-    fileId: "1aDR8Jp_Nk4mfZRejqrXiUqtH4KAym2JW",
-    type: "docx",
-    category: "Giải thích",
-  },
-  {
-    id: "explain_stock_types",
-    title: "GIẢI THÍCH LOẠI TỒN KHO",
-    desc: "GIẢI THÍCH VỀ CÁC LOẠI TỒN KHO",
-    fileId: "1mQJUpNagnQFauy0i38lLNI8QVZIfQWLy",
-    type: "docx",
-    category: "Giải thích",
-  },
-    {
-    id: "explain_prod_orders_types",
-    title: "GIẢI THÍCH CÁC LOẠI LỆNH SẢN XUẤT",
-    desc: "GIẢI THÍCH VỀ CÁC LOẠI LỆNH SẢN XUẤT",
-    fileId: "1I_P88V0jZuMmKB7yePR5jW0Z1QjJ696b",
-    type: "docx",
-    category: "Giải thích",
+    id: "machine_list",
+    title: "Danh sách máy",
+    desc: "Thêm mới",
+    fileId: "",
+    type: "xlsx",
+    category: "Thêm mới",
+    sectionId: "rules-catalog",
   },
   {
     id: "direct_delivery_guidance",
-    title: "HƯỚNG DẪN TẠO ĐƠN GIAO HÀNG TRỰC TIẾP KHI CÓ TỒN KHO",
+    title: "Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
     desc: "Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
     fileId: "1qDimabt8D3VCwKuW2cr1Uomi8SGmaTMe",
     type: "pptx",
     category: "Hướng dẫn",
+    sectionId: "operation-guides",
   },
   {
     id: "scaning_wo_guidance",
-    title: "HƯỚNG DẪN SỬ DỤNG TERMINAL",
+    title: "Hướng dẫn sử dụng terminal",
     desc: "Hướng dẫn sử dụng terminal để scan lệnh sản xuất",
     fileId: "11LWYex7HOOXuqcZEAr98_OgKxzxj7oE7",
     type: "pdf",
     category: "Hướng dẫn",
+    sectionId: "operation-guides",
   },
-    {
+  {
     id: "generate_wo_guidance",
-    title: "HƯỚNG DẪN TẠO LỆNH SẢN XUẤT",
+    title: "Hướng dẫn tạo lệnh sản xuất",
     desc: "Hướng dẫn tạo lệnh sản xuất",
     fileId: "1OlW6869fM2aBt2By1fGelNeuRq0etIxe",
     type: "pdf",
     category: "Hướng dẫn",
+    sectionId: "operation-guides",
+  },
+  {
+    id: "erp_demo_flow",
+    title: "ERP Demo Flow",
+    desc: "Quy trình ERP thử nghiệm",
+    fileId: "1F8UKUPg5zE9uBcojkZgW99n79uuZZRAR",
+    type: "pdf",
+    category: "Quy trình",
+    sectionId: "references",
+  },
+  {
+    id: "explain_mac",
+    title: "Giải thích MAC",
+    desc: "Giải thích về mã MAC",
+    fileId: "1aDR8Jp_Nk4mfZRejqrXiUqtH4KAym2JW",
+    type: "docx",
+    category: "Giải thích",
+    sectionId: "references",
+  },
+  {
+    id: "explain_stock_types",
+    title: "Giải thích loại tồn kho",
+    desc: "Giải thích về các loại tồn kho",
+    fileId: "1mQJUpNagnQFauy0i38lLNI8QVZIfQWLy",
+    type: "docx",
+    category: "Giải thích",
+    sectionId: "references",
+  },
+  {
+    id: "explain_prod_orders_types",
+    title: "Giải thích các loại lệnh sản xuất",
+    desc: "Giải thích về các loại lệnh sản xuất",
+    fileId: "1I_P88V0jZuMmKB7yePR5jW0Z1QjJ696b",
+    type: "docx",
+    category: "Giải thích",
+    sectionId: "references",
   },
 ];
 

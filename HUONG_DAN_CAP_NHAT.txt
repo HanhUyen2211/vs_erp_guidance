@@ -1,57 +1,66 @@
 HƯỚNG DẪN CẬP NHẬT TÀI LIỆU — ERP GUIDANCE PORTAL
 ======================================================
 
-Mỗi khi cần thêm hoặc cập nhật PDF / Video cho một module,
-chỉ cần mở file: src/config.js
+CÁCH CẬP NHẬT
+----------------------------------
+1. Mở website ERP Guidance
+2. Chọn menu "Quản trị"
+3. Đăng nhập admin
+4. Chọn khu vực cần cập nhật:
+   - Home: PDF / Video tổng quan
+   - Module: PDF / Video cho module hoặc sub-module
+   - Tài liệu chung: thêm / sửa / xóa tài liệu trong tab "Tài liệu"
+5. Dán Google Drive File ID hoặc link đầy đủ
+6. Bấm Lưu
+
+Khi bấm Lưu, web sẽ gọi Vercel Function để commit JSON mới lên GitHub.
+Sau đó Vercel tự deploy lại từ commit đó.
+
+ĐĂNG NHẬP ADMIN
+----------------------------------
+Credential được đọc từ env trên Vercel:
+  - ADMIN_USERNAME
+  - ADMIN_PASSWORD
+  - ADMIN_SESSION_SECRET
+
+Nếu chưa cấu hình env, local/dev sẽ dùng mặc định:
+  - admin / erp-admin
+
+ENV GITHUB CẦN THIẾT
+----------------------------------
+  - GITHUB_TOKEN
+  - GITHUB_OWNER
+  - GITHUB_REPO
+  - GITHUB_BRANCH (mặc định: main)
+  - GITHUB_CONTENT_PATH (mặc định: site-content.json)
 
 CÁCH LẤY FILE ID TỪ GOOGLE DRIVE
 ----------------------------------
-1. Upload file PDF hoặc Video lên Google Drive
-2. Click chuột phải vào file → Chọn "Share"
-3. Đổi quyền truy cập thành "Anyone with the link" (Bất kỳ ai có link)
-4. Copy link — link có dạng:
-   https://drive.google.com/file/d/FILE_ID_NẰM_Ở_ĐÂY/view
-5. Lấy phần ở giữa /d/ và /view — đó là FILE_ID
+1. Upload file lên Google Drive
+2. Share → "Anyone with the link"
+3. Copy link dạng:
+   https://drive.google.com/file/d/FILE_ID/view
+4. Có thể dán cả link hoặc chỉ dán FILE_ID
 
-VÍ DỤ
+TAB TÀI LIỆU
 ----------------------------------
-Link:    https://drive.google.com/file/d/1aBcDeFgHiJkLmNoPqRsTuV/view
-File ID: 1aBcDeFgHiJkLmNoPqRsTuV
-
-CÁCH CẬP NHẬT TRONG config.js
-----------------------------------
-Mở src/config.js, tìm module cần cập nhật và điền File ID vào:
-
-  {
-    id: "login",
-    label: "Login",
-    pdf: "1aBcDeFgHiJkLmNoPqRsTuV",    ← Paste File ID của PDF vào đây
-    video: "2xYzAbCdEfGhIjKlMnOpQr",   ← Paste File ID của Video vào đây
-  }
-
-Sau khi lưu file → commit và push lên GitHub → Vercel tự động deploy.
-
-DANH SÁCH MODULE & VỊ TRÍ TRONG CONFIG.JS
-----------------------------------
-1.  LOGIN                  → id: "login"
-2.  ITEM MASTER            → id: "item-master"
-3.  BOM                    → id: "bom"
-4.  SALES ORDER            → id: "sales-order"
-5.  PRODUCTION ORDER
-    ├─ Production Order    → id: "production-order-main"
-    └─ Recipe              → id: "recipe"
-6.  PURCHASE
-    ├─ Purchase Requisitions → id: "purchase-requisitions"
-    └─ Purchase Orders       → id: "purchase-orders"
-7.  DELIVERY
-    ├─ Outbound Delivery   → id: "outbound-delivery"
-    ├─ Inbound Delivery    → id: "inbound-delivery"
-    ├─ Good Issues         → id: "good-issues"
-    └─ Good Receipts       → id: "good-receipts"
-8.  INVOICE                → id: "invoice"
+1. Quy định & Danh mục
+   - Hướng dẫn mã code
+   - Danh sách ID
+   - Danh sách máy
+2. Hướng dẫn thao tác
+   - Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho
+   - Hướng dẫn sử dụng terminal
+   - Hướng dẫn tạo lệnh sản xuất
+3. Tài liệu tham khảo
+   - ERP Demo Flow
+   - Giải thích MAC
+   - Giải thích loại tồn kho
+   - Giải thích các loại lệnh sản xuất
 
 LƯU Ý
 ----------------------------------
-- Nếu để trống pdf: "" hoặc video: "" thì web sẽ hiện placeholder "Chưa có tài liệu".
-- Để thêm sub-module mới cho Production Order: thêm object vào mảng "children" của tab "production-order".
-- Không cần đụng vào các file khác ngoài config.js.
+- Không cần server riêng hay database.
+- Nội dung được lưu trong GitHub repo.
+- Nếu GitHub env chưa cấu hình, chức năng lưu sẽ báo lỗi để tránh lưu nhầm.
+- Khi chạy local bằng `npm run dev`, chỉ xem được giao diện; login/save cần Vercel hoặc `vercel dev`.

@@ -1,4 +1,9 @@
-import { tabs, siteConfig, documents } from './config.js';
+import {
+  tabs as defaultTabs,
+  siteConfig as defaultSiteConfig,
+  documents as defaultDocuments,
+  documentSections as defaultDocumentSections,
+} from './config.js';
 
 // ─── Danh sách bộ phận ───────────────────────────────────
 const DEPARTMENTS = [
@@ -54,6 +59,12 @@ const ICONS = {
   check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
   alertCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
   trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`,
+  admin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-2.8 8.7-7 10-4.2-1.3-7-5.4-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>`,
+  plus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  save: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+  edit: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>`,
+  logout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  refresh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M20.5 15a9 9 0 0 1-14.9 3.4L1 14"/></svg>`,
 };
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -63,12 +74,65 @@ function gdriveDownload(id) { return `https://drive.google.com/uc?export=downloa
 // Google Drive preview works for PDF, PPTX, XLSX, DOCX using the same URL
 function gdrivePreview(id)  { return `https://drive.google.com/file/d/${id}/preview`; }
 
+function cloneContent(value) {
+  if (typeof structuredClone === 'function') return structuredClone(value);
+  return JSON.parse(JSON.stringify(value));
+}
+
+function escapeHTML(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function extractDriveId(input = '') {
+  const value = input.trim();
+  if (!value) return '';
+
+  const fileMatch = value.match(/\/file\/d\/([^/]+)/);
+  if (fileMatch) return fileMatch[1];
+
+  const idMatch = value.match(/[?&]id=([^&]+)/);
+  if (idMatch) return idMatch[1];
+
+  const foldersMatch = value.match(/\/folders\/([^/?]+)/);
+  if (foldersMatch) return foldersMatch[1];
+
+  return value;
+}
+
+function slugify(value = '') {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48) || 'tai-lieu';
+}
+
+function safeExternalUrl(value = '') {
+  try {
+    const url = new URL(value, window.location.origin);
+    if (['http:', 'https:', 'mailto:'].includes(url.protocol)) return url.href;
+  } catch (err) {
+    return '#';
+  }
+  return '#';
+}
+
 // ─── File Type Config ─────────────────────────────────────
 const FILE_TYPES = {
   pdf:  { label: 'PDF',  icon: () => ICONS.pdf,      colorClass: 'ft-pdf'  },
   pptx: { label: 'PPTX', icon: () => ICONS.pptx,     colorClass: 'ft-pptx' },
   xlsx: { label: 'XLSX', icon: () => ICONS.xlsx,     colorClass: 'ft-xlsx' },
   docx: { label: 'DOCX', icon: () => ICONS.docx,     colorClass: 'ft-docx' },
+  video: { label: 'Video', icon: () => ICONS.video,   colorClass: 'ft-video' },
   link: { label: 'Link', icon: () => ICONS.external,  colorClass: 'ft-link' },
 };
 
@@ -77,9 +141,248 @@ function getFileType(doc) {
 }
 
 // ─── State ────────────────────────────────────────────────
+const CONTENT_CACHE_KEY = 'erp-guidance-content-cache-v2';
+const API_CONTENT_URL = '/api/content';
+const API_AUTH_URL = '/api/auth';
+
+let tabs = cloneContent(defaultTabs);
+let siteConfig = cloneContent(defaultSiteConfig);
+let documents = cloneContent(defaultDocuments);
+let documentSections = cloneContent(defaultDocumentSections);
 let activeTabId = null;
 let activeDocId = null;
+let activeDocSectionId = documentSections[0]?.id || 'references';
 let sidebarOpen = false;
+
+const CATEGORY_SECTION_FALLBACK = {
+  'Quy định': 'rules-catalog',
+  'Thêm mới': 'rules-catalog',
+  'Hướng dẫn': 'operation-guides',
+  'Quy trình': 'references',
+  'Giải thích': 'references',
+};
+
+function normalizeDocuments(list) {
+  return list.map((doc) => ({
+    ...doc,
+    type: doc.type || 'pdf',
+    category: doc.category || 'Khác',
+    sectionId: doc.sectionId || CATEGORY_SECTION_FALLBACK[doc.category] || documentSections[0]?.id || 'references',
+  }));
+}
+
+function getDefaultContentState() {
+  return {
+    siteConfig: {
+      ...cloneContent(defaultSiteConfig),
+      homePdf: defaultSiteConfig.homePdf || '',
+      homeVideo: defaultSiteConfig.homeVideo || '',
+    },
+    tabs: cloneContent(defaultTabs),
+    documents: normalizeDocuments(cloneContent(defaultDocuments)),
+    documentSections: cloneContent(defaultDocumentSections),
+  };
+}
+
+function applyContentState(content = {}) {
+  const defaults = getDefaultContentState();
+  const previousDocSectionId = activeDocSectionId;
+  const previousDocId = activeDocId;
+  const nextSiteConfig = content.siteConfig && typeof content.siteConfig === 'object'
+    ? { ...defaults.siteConfig, ...content.siteConfig }
+    : defaults.siteConfig;
+
+  siteConfig = {
+    ...nextSiteConfig,
+    homePdf: nextSiteConfig.homePdf || '',
+    homeVideo: nextSiteConfig.homeVideo || '',
+  };
+  tabs = Array.isArray(content.tabs) ? cloneContent(content.tabs) : defaults.tabs;
+  documents = normalizeDocuments(Array.isArray(content.documents) ? cloneContent(content.documents) : defaults.documents);
+  documentSections = Array.isArray(content.documentSections) && content.documentSections.length > 0
+    ? cloneContent(content.documentSections)
+    : defaults.documentSections;
+  activeDocSectionId = documentSections.some((section) => section.id === previousDocSectionId)
+    ? previousDocSectionId
+    : documentSections[0]?.id || 'references';
+  activeDocId = documents.some((doc) => doc.id === previousDocId)
+    ? previousDocId
+    : documents[0]?.id || null;
+}
+
+function getContentPayload() {
+  return {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    siteConfig: {
+      ...cloneContent(siteConfig),
+      homePdf: siteConfig.homePdf || '',
+      homeVideo: siteConfig.homeVideo || '',
+    },
+    tabs: cloneContent(tabs),
+    documents: cloneContent(documents),
+    documentSections: cloneContent(documentSections),
+  };
+}
+
+function cacheContentState(content) {
+  try {
+    localStorage.setItem(CONTENT_CACHE_KEY, JSON.stringify(content));
+  } catch (err) {
+    console.warn('[ERP Guidance] Không cache được nội dung:', err);
+  }
+}
+
+function readCachedContent() {
+  try {
+    const raw = localStorage.getItem(CONTENT_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    console.warn('[ERP Guidance] Không đọc được cache nội dung:', err);
+    return null;
+  }
+}
+
+async function loadContentState() {
+  applyContentState(getDefaultContentState());
+
+  try {
+    const response = await fetch(API_CONTENT_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const remote = await response.json();
+    applyContentState(remote);
+    cacheContentState(remote);
+    return;
+  } catch (err) {
+    console.warn('[ERP Guidance] Không tải được nội dung từ GitHub API, dùng cache/default:', err);
+  }
+
+  const cached = readCachedContent();
+  if (cached) applyContentState(cached);
+}
+
+async function saveContentState(overrides = null) {
+  const payload = overrides || getContentPayload();
+
+  let response;
+  try {
+    response = await fetch(API_CONTENT_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    throw new Error('Chức năng lưu GitHub chỉ hoạt động trên Vercel hoặc khi chạy `vercel dev`.');
+  }
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || 'Không lưu được nội dung lên GitHub.');
+  }
+
+  const nextContent = result.content || payload;
+  applyContentState(nextContent);
+  cacheContentState(nextContent);
+  return nextContent;
+}
+
+async function resetContentState() {
+  const defaults = getDefaultContentState();
+  await saveContentState(defaults);
+}
+
+async function checkAdminSession() {
+  try {
+    const response = await fetch(API_AUTH_URL, { cache: 'no-store', credentials: 'include' });
+    if (!response.ok) return false;
+    const data = await response.json().catch(() => ({}));
+    return !!data.authenticated;
+  } catch (err) {
+    return false;
+  }
+}
+
+async function loginAdmin(username, password) {
+  let response;
+  try {
+    response = await fetch(API_AUTH_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+  } catch (error) {
+    throw new Error('Đăng nhập admin cần chạy trên Vercel hoặc khi dùng `vercel dev`.');
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || 'Đăng nhập thất bại.');
+  }
+
+  return data;
+}
+
+async function logoutAdmin() {
+  await fetch(API_AUTH_URL, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+}
+
+function getDocumentSection(sectionId) {
+  return documentSections.find((section) => section.id === sectionId) || documentSections[0];
+}
+
+function getDocSectionId(doc) {
+  return doc.sectionId || CATEGORY_SECTION_FALLBACK[doc.category] || documentSections[0]?.id || 'references';
+}
+
+function getFlattenedTabs() {
+  return tabs.flatMap((tab) => {
+    if (!tab.children || tab.children.length === 0) {
+      return [{ tab, parent: null }];
+    }
+    return tab.children.map((child) => ({ tab: child, parent: tab }));
+  });
+}
+
+function findTabById(tabId) {
+  for (const tab of tabs) {
+    if (tab.id === tabId) return { tab, parent: null };
+    if (tab.children) {
+      const child = tab.children.find((item) => item.id === tabId);
+      if (child) return { tab: child, parent: tab };
+    }
+  }
+  return { tab: null, parent: null };
+}
+
+function createUniqueDocId(title) {
+  const base = slugify(title);
+  const usedIds = new Set(documents.map((doc) => doc.id));
+  let candidate = base;
+  let index = 2;
+
+  while (usedIds.has(candidate)) {
+    candidate = `${base}-${index}`;
+    index += 1;
+  }
+
+  return candidate;
+}
+
+function navigateToHash(hash, fallback) {
+  const nextHash = `#${hash}`;
+  if (window.location.hash === nextHash) {
+    Promise.resolve(fallback()).catch((error) => {
+      console.error('[ERP Guidance] Navigation failed:', error);
+    });
+    return;
+  }
+  window.location.hash = hash;
+}
 
 // ─── Build Sidebar ────────────────────────────────────────
 function buildSidebar() {
@@ -96,7 +399,7 @@ function buildSidebar() {
     <span class="nav-icon">${ICONS.home}</span>
     <span class="nav-label">Home</span>
   `;
-  homeBtn.addEventListener('click', () => showHome());
+  homeBtn.addEventListener('click', () => navigateToHash('home', showHome));
   homeItem.appendChild(homeBtn);
   nav.appendChild(homeItem);
 
@@ -110,7 +413,7 @@ function buildSidebar() {
     <span class="nav-icon">${ICONS.library}</span>
     <span class="nav-label">Tài liệu</span>
   `;
-  docsBtn.addEventListener('click', () => showDocumentsPage());
+  docsBtn.addEventListener('click', () => navigateToHash('documents', showDocumentsPage));
   docsItem.appendChild(docsBtn);
   nav.appendChild(docsItem);
 
@@ -125,9 +428,23 @@ function buildSidebar() {
     <span class="nav-label">Phản hồi</span>
     <span class="feedback-badge">Góp ý</span>
   `;
-  feedbackBtn.addEventListener('click', () => showFeedbackPage());
+  feedbackBtn.addEventListener('click', () => navigateToHash('feedback', showFeedbackPage));
   feedbackItem.appendChild(feedbackBtn);
   nav.appendChild(feedbackItem);
+
+  // ── Admin button ──
+  const adminItem = document.createElement('div');
+  adminItem.className = 'nav-item';
+  const adminBtn = document.createElement('button');
+  adminBtn.className = 'nav-btn';
+  adminBtn.id = 'nav-admin';
+  adminBtn.innerHTML = `
+    <span class="nav-icon">${ICONS.admin}</span>
+    <span class="nav-label">Quản trị</span>
+  `;
+  adminBtn.addEventListener('click', () => navigateToHash('admin', showAdminPage));
+  adminItem.appendChild(adminBtn);
+  nav.appendChild(adminItem);
 
   // Divider
   const divider = document.createElement('div');
@@ -171,7 +488,7 @@ function buildSidebar() {
           <span class="sub-btn-label">${child.label}</span>
           ${child.description ? `<span class="sub-btn-desc">${child.description}</span>` : ''}
         `;
-        subBtn.addEventListener('click', () => setActiveTab(child.id));
+        subBtn.addEventListener('click', () => navigateToHash(child.id, () => setActiveTab(child.id)));
         subInner.appendChild(subBtn);
       });
 
@@ -179,7 +496,7 @@ function buildSidebar() {
       item.appendChild(btn);
       item.appendChild(subNav);
     } else {
-      btn.addEventListener('click', () => setActiveTab(tab.id));
+      btn.addEventListener('click', () => navigateToHash(tab.id, () => setActiveTab(tab.id)));
       item.appendChild(btn);
     }
 
@@ -201,28 +518,31 @@ function toggleSubNav(item) {
 }
 
 // ─── Documents Page ──────────────────────────────────────
-function showDocumentsPage() {
+function showDocumentsPage(sectionId = activeDocSectionId) {
   // Reset all active states
   document.querySelectorAll('.nav-btn, .sub-btn').forEach((el) => el.classList.remove('active'));
   document.getElementById('nav-documents')?.classList.add('active');
   activeTabId = null;
 
+  const currentSection = getDocumentSection(sectionId) || documentSections[0];
+  activeDocSectionId = currentSection?.id || 'references';
+  const sectionDocs = documents.filter((doc) => getDocSectionId(doc) === activeDocSectionId);
+  const isEmpty = sectionDocs.length === 0;
+
   // Update header
   document.getElementById('page-title').textContent = 'Tài liệu';
-  document.getElementById('page-subtitle').textContent = 'Tài liệu tham khảo nội bộ';
+  document.getElementById('page-subtitle').textContent = currentSection?.desc || 'Tài liệu tham khảo nội bộ';
   document.getElementById('breadcrumb').innerHTML =
-    '<span>ERP Guidance</span><span class="breadcrumb-sep">/</span><span>Tài liệu</span>';
+    `<span>ERP Guidance</span><span class="breadcrumb-sep">/</span><span>Tài liệu</span><span class="breadcrumb-sep">/</span><span>${escapeHTML(currentSection?.label || '')}</span>`;
 
   document.getElementById('welcome-screen').style.display = 'none';
   const container = document.getElementById('content-container');
   container.style.display = 'flex';
 
-  const isEmpty = !documents || documents.length === 0;
-
   // ── Group by category ──
   const grouped = {};
   if (!isEmpty) {
-    documents.forEach((doc) => {
+    sectionDocs.forEach((doc) => {
       const cat = doc.category || 'Khác';
       if (!grouped[cat]) grouped[cat] = [];
       grouped[cat].push(doc);
@@ -230,68 +550,90 @@ function showDocumentsPage() {
   }
 
   // Set default active doc
-  activeDocId = (!isEmpty) ? documents[0].id : null;
+  activeDocId = sectionDocs.some((doc) => doc.id === activeDocId) ? activeDocId : sectionDocs[0]?.id || null;
 
-  const firstDoc = (!isEmpty) ? documents[0] : null;
-  const hasFirstFile = firstDoc && firstDoc.fileId && firstDoc.fileId.trim() !== '';
+  const firstDoc = sectionDocs.find((doc) => doc.id === activeDocId) || null;
 
   container.innerHTML = `
-    <div class="docs-layout" id="docs-layout">
+    <div class="docs-page">
+      <div class="docs-tabs" role="tablist" aria-label="Nhóm tài liệu">
+        ${documentSections.map((section) => {
+          const count = documents.filter((doc) => getDocSectionId(doc) === section.id).length;
+          return `
+            <button
+              type="button"
+              class="docs-tab ${section.id === activeDocSectionId ? 'active' : ''}"
+              data-doc-section-id="${escapeHTML(section.id)}"
+              role="tab"
+              aria-selected="${section.id === activeDocSectionId ? 'true' : 'false'}">
+              <span>${escapeHTML(section.label)}</span>
+              <small>${count}</small>
+            </button>
+          `;
+        }).join('')}
+      </div>
 
-      <!-- Left: list -->
-      <div class="docs-sidebar">
-        <div class="docs-sidebar-header">
-          <span class="docs-sidebar-title">${ICONS.library} Danh sách tài liệu</span>
-          <span class="docs-count">${isEmpty ? 0 : documents.length} tài liệu</span>
+      <div class="docs-layout" id="docs-layout">
+
+        <!-- Left: list -->
+        <div class="docs-sidebar">
+          <div class="docs-sidebar-header">
+            <span class="docs-sidebar-title">${ICONS.library} ${escapeHTML(currentSection?.label || 'Tài liệu')}</span>
+            <span class="docs-count">${sectionDocs.length} tài liệu</span>
+          </div>
+
+          <div class="docs-list" id="docs-list">
+            ${
+              isEmpty
+                ? `<div class="docs-empty">
+                    <div class="docs-empty-icon">${ICONS.library}</div>
+                    <div class="docs-empty-title">Chưa có tài liệu</div>
+                    <div class="docs-empty-text">Admin có thể thêm tài liệu tại mục Quản trị</div>
+                  </div>`
+                : Object.entries(grouped).map(([cat, items]) => `
+                    <div class="docs-category">
+                      <div class="docs-category-label">${ICONS.tag} ${escapeHTML(cat)}</div>
+                      ${items.map((doc) => {
+                        const ft = getFileType(doc);
+                        return `
+                        <button class="docs-item ${doc.id === activeDocId ? 'active' : ''}"
+                                data-doc-id="${escapeHTML(doc.id)}">
+                          <div class="docs-item-icon ${ft.colorClass}">${ft.icon()}</div>
+                          <div class="docs-item-body">
+                            <div class="docs-item-title">${escapeHTML(doc.title)}</div>
+                            ${doc.desc ? `<div class="docs-item-desc">${escapeHTML(doc.desc)}</div>` : ''}
+                          </div>
+                          <span class="docs-item-badge ${ft.colorClass}">${ft.label}</span>
+                          <div class="docs-item-arrow">${ICONS.chevron}</div>
+                        </button>`;
+                      }).join('')}
+                    </div>
+                  `).join('')
+            }
+          </div>
         </div>
 
-        <div class="docs-list" id="docs-list">
+        <!-- Right: preview -->
+        <div class="docs-preview" id="docs-preview">
           ${
             isEmpty
-              ? `<div class="docs-empty">
-                  <div class="docs-empty-icon">${ICONS.library}</div>
-                  <div class="docs-empty-title">Chưa có tài liệu</div>
-                  <div class="docs-empty-text">Thêm tài liệu vào mảng <code>documents</code> trong <code>config.js</code></div>
-                </div>`
-              : Object.entries(grouped).map(([cat, items]) => `
-                  <div class="docs-category">
-                    <div class="docs-category-label">${ICONS.tag} ${cat}</div>
-                    ${items.map((doc) => {
-                      const ft = getFileType(doc);
-                      return `
-                      <button class="docs-item ${doc.id === activeDocId ? 'active' : ''}"
-                              id="docitem-${doc.id}"
-                              data-doc-id="${doc.id}">
-                        <div class="docs-item-icon ${ft.colorClass}">${ft.icon()}</div>
-                        <div class="docs-item-body">
-                          <div class="docs-item-title">${doc.title}</div>
-                          ${doc.desc ? `<div class="docs-item-desc">${doc.desc}</div>` : ''}
-                        </div>
-                        <span class="docs-item-badge ${ft.colorClass}">${ft.label}</span>
-                        <div class="docs-item-arrow">${ICONS.chevron}</div>
-                      </button>`;
-                    }).join('')}
-                  </div>
-                `).join('')
+              ? `<div class="docs-preview-empty">
+                  <div class="docs-preview-empty-icon">${ICONS.pdf}</div>
+                  <div class="docs-preview-empty-title">Chọn một tài liệu để xem</div>
+                  <div class="docs-preview-empty-text">Tài liệu sẽ hiển thị ở đây</div>
+                 </div>`
+              : renderDocPreview(firstDoc)
           }
         </div>
-      </div>
 
-      <!-- Right: preview -->
-      <div class="docs-preview" id="docs-preview">
-        ${
-          isEmpty
-            ? `<div class="docs-preview-empty">
-                <div class="docs-preview-empty-icon">${ICONS.pdf}</div>
-                <div class="docs-preview-empty-title">Chọn một tài liệu để xem</div>
-                <div class="docs-preview-empty-text">Tài liệu sẽ hiển thị ở đây</div>
-               </div>`
-            : renderDocPreview(firstDoc)
-        }
       </div>
-
     </div>
   `;
+
+  // Attach document section events
+  container.querySelectorAll('.docs-tab').forEach((btn) => {
+    btn.addEventListener('click', () => showDocumentsPage(btn.dataset.docSectionId));
+  });
 
   // Attach click events
   container.querySelectorAll('.docs-item').forEach((btn) => {
@@ -318,25 +660,27 @@ function renderDocPreview(doc) {
   const hasFile = doc.fileId && doc.fileId.trim() !== '';
   const ft = getFileType(doc);
   const isLink = doc.type === 'link';
+  const isVideo = doc.type === 'video';
 
   if (isLink && doc.url) {
+    const safeUrl = safeExternalUrl(doc.url);
     return `
       <div class="docs-preview-header">
         <div class="docs-preview-title-group">
           <div class="docs-preview-icon ${ft.colorClass}">${ft.icon()}</div>
           <div>
-            <div class="docs-preview-title">${doc.title}</div>
-            ${doc.desc ? `<div class="docs-preview-subtitle">${doc.desc}</div>` : ''}
+            <div class="docs-preview-title">${escapeHTML(doc.title)}</div>
+            ${doc.desc ? `<div class="docs-preview-subtitle">${escapeHTML(doc.desc)}</div>` : ''}
           </div>
         </div>
-        <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn-download" id="btn-link-${doc.id}">
+        <a href="${escapeHTML(safeUrl)}" target="_blank" rel="noopener noreferrer" class="btn-download">
           ${ICONS.external} Mở liên kết
         </a>
       </div>
       <div class="docs-preview-body">
         <div class="docs-preview-empty">
           <div class="docs-preview-empty-icon">${ft.icon()}</div>
-          <div class="docs-preview-empty-title">${doc.title}</div>
+          <div class="docs-preview-empty-title">${escapeHTML(doc.title)}</div>
           <div class="docs-preview-empty-text">Nhấn <strong>Mở liên kết</strong> để xem tài liệu</div>
         </div>
       </div>
@@ -349,18 +693,17 @@ function renderDocPreview(doc) {
         <div class="docs-preview-icon ${ft.colorClass}">${ft.icon()}</div>
         <div>
           <div class="docs-preview-title">
-            ${doc.title}
+            ${escapeHTML(doc.title)}
             <span class="docs-preview-badge ${ft.colorClass}">${ft.label}</span>
           </div>
-          ${doc.desc ? `<div class="docs-preview-subtitle">${doc.desc}</div>` : ''}
+          ${doc.desc ? `<div class="docs-preview-subtitle">${escapeHTML(doc.desc)}</div>` : ''}
         </div>
       </div>
       ${hasFile ? `
         <a href="${gdriveDownload(doc.fileId)}"
            class="btn-download"
            target="_blank"
-           rel="noopener noreferrer"
-           id="btn-doc-download-${doc.id}">
+           rel="noopener noreferrer">
           ${ICONS.download} Tải xuống
         </a>` : ''}
     </div>
@@ -369,12 +712,13 @@ function renderDocPreview(doc) {
         ? `<iframe class="docs-frame"
                src="${gdrivePreview(doc.fileId)}"
                allow="autoplay"
+               ${isVideo ? 'allowfullscreen' : ''}
                loading="lazy"
-               title="${doc.title}"></iframe>`
+               title="${escapeHTML(doc.title)}"></iframe>`
         : `<div class="docs-preview-empty">
                <div class="docs-preview-empty-icon ${ft.colorClass}">${ft.icon()}</div>
                <div class="docs-preview-empty-title">Chưa có file tài liệu</div>
-               <div class="docs-preview-empty-text">Điền <code>fileId</code> trong <code>config.js</code> để hiển thị</div>
+               <div class="docs-preview-empty-text">Admin có thể thêm Drive ID tại mục Quản trị</div>
              </div>`
       }
     </div>
@@ -384,16 +728,7 @@ function renderDocPreview(doc) {
 // ─── Set Active Tab ───────────────────────────────────────
 function setActiveTab(tabId) {
   activeTabId = tabId;
-  let tabData = null;
-  let parentTab = null;
-
-  for (const tab of tabs) {
-    if (tab.id === tabId) { tabData = tab; break; }
-    if (tab.children) {
-      const child = tab.children.find((c) => c.id === tabId);
-      if (child) { tabData = child; parentTab = tab; break; }
-    }
-  }
+  const { tab: tabData, parent: parentTab } = findTabById(tabId);
 
   if (!tabData) return;
 
@@ -692,7 +1027,7 @@ function showHome() {
   // Attach click handlers to module cards
   container.querySelectorAll('.home-card').forEach((card) => {
     const targetId = card.dataset.tabGoto;
-    card.addEventListener('click', () => setActiveTab(targetId));
+    card.addEventListener('click', () => navigateToHash(targetId, () => setActiveTab(targetId)));
   });
 
   if (window.innerWidth <= 768) closeMobileSidebar();
@@ -715,6 +1050,556 @@ function closeMobileSidebar() {
   sidebarOpen = false;
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ─── Admin Page ───────────────────────────────────────────
+async function showAdminPage() {
+  document.querySelectorAll('.nav-btn, .sub-btn').forEach((el) => el.classList.remove('active'));
+  document.getElementById('nav-admin')?.classList.add('active');
+  activeTabId = null;
+
+  document.getElementById('page-title').textContent = 'Quản trị';
+  document.getElementById('page-subtitle').textContent = 'Cập nhật tài liệu và video hướng dẫn';
+  document.getElementById('breadcrumb').innerHTML =
+    '<span>ERP Guidance</span><span class="breadcrumb-sep">/</span><span>Quản trị</span>';
+
+  document.getElementById('welcome-screen').style.display = 'none';
+  const container = document.getElementById('content-container');
+  container.style.display = 'flex';
+
+  container.innerHTML = `
+    <div class="admin-login-shell">
+      <div class="admin-login-card">
+        <div class="admin-login-icon">${ICONS.admin}</div>
+        <div>
+          <div class="admin-login-title">Đang kiểm tra quyền truy cập</div>
+          <div class="admin-login-subtitle">Đợi một chút để tải phiên đăng nhập hiện tại.</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const authenticated = await checkAdminSession();
+  if (authenticated) {
+    renderAdminDashboard(container);
+  } else {
+    renderAdminLogin(container);
+  }
+
+  if (window.innerWidth <= 768) closeMobileSidebar();
+}
+
+function renderAdminLogin(container) {
+  container.innerHTML = `
+    <div class="admin-login-shell">
+      <form class="admin-login-card" id="admin-login-form" novalidate>
+        <div class="admin-login-icon">${ICONS.admin}</div>
+        <div>
+          <div class="admin-login-title">Đăng nhập Admin</div>
+          <div class="admin-login-subtitle">Nhập tài khoản quản trị để cập nhật nội dung hướng dẫn.</div>
+        </div>
+
+        <div class="admin-field">
+          <label class="admin-label" for="admin-username">Tài khoản</label>
+          <input class="admin-input" id="admin-username" name="username" autocomplete="username" required />
+        </div>
+
+        <div class="admin-field">
+          <label class="admin-label" for="admin-password">Mật khẩu</label>
+          <input class="admin-input" id="admin-password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+
+        <span class="admin-form-error" id="admin-login-error"></span>
+
+        <button type="submit" class="admin-primary-btn">
+          ${ICONS.admin}
+          <span>Đăng nhập</span>
+        </button>
+      </form>
+    </div>
+  `;
+
+  document.getElementById('admin-login-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const username = document.getElementById('admin-username').value.trim();
+    const password = document.getElementById('admin-password').value;
+
+    document.getElementById('admin-login-error').textContent = '';
+    loginAdmin(username, password)
+      .then(() => {
+        showToast('Đăng nhập admin thành công.', 'success');
+        renderAdminDashboard(container);
+      })
+      .catch((error) => {
+        document.getElementById('admin-login-error').textContent = error.message || 'Tài khoản hoặc mật khẩu chưa đúng.';
+      });
+  });
+}
+
+function renderAdminDashboard(container) {
+  const moduleOptions = getFlattenedTabs();
+  const firstModuleId = moduleOptions[0]?.tab.id || '';
+  const categoryValues = [...new Set([
+    'Quy định',
+    'Thêm mới',
+    'Hướng dẫn',
+    'Quy trình',
+    'Giải thích',
+    ...documents.map((doc) => doc.category).filter(Boolean),
+  ])];
+
+  container.innerHTML = `
+    <div class="admin-wrapper">
+      <div class="admin-toolbar">
+        <div>
+          <div class="admin-title">Quản trị nội dung</div>
+          <div class="admin-subtitle">Các thay đổi sẽ được commit lên GitHub qua Vercel Function.</div>
+        </div>
+        <div class="admin-toolbar-actions">
+          <button type="button" class="admin-secondary-btn" id="admin-export">
+            ${ICONS.download}
+            <span>Xuất JSON</span>
+          </button>
+          <button type="button" class="admin-secondary-btn admin-danger-text" id="admin-reset-content">
+            ${ICONS.refresh}
+            <span>Khôi phục gốc</span>
+          </button>
+          <button type="button" class="admin-secondary-btn" id="admin-logout">
+            ${ICONS.logout}
+            <span>Đăng xuất</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <form class="admin-panel" id="admin-home-form">
+          <div class="admin-panel-header">
+            <div>
+              <div class="admin-panel-title">Home</div>
+              <div class="admin-panel-subtitle">Tài liệu và video tổng quan</div>
+            </div>
+          </div>
+
+          <div class="admin-field">
+            <label class="admin-label" for="admin-home-pdf">PDF tổng quan</label>
+            <input class="admin-input" id="admin-home-pdf" value="${escapeHTML(siteConfig.homePdf || '')}" placeholder="Drive ID hoặc link Google Drive" />
+          </div>
+
+          <div class="admin-field">
+            <label class="admin-label" for="admin-home-video">Video tổng quan</label>
+            <input class="admin-input" id="admin-home-video" value="${escapeHTML(siteConfig.homeVideo || '')}" placeholder="Drive ID hoặc link Google Drive" />
+          </div>
+
+          <button type="submit" class="admin-primary-btn">
+            ${ICONS.save}
+            <span>Lưu Home</span>
+          </button>
+        </form>
+
+        <form class="admin-panel" id="admin-module-form">
+          <div class="admin-panel-header">
+            <div>
+              <div class="admin-panel-title">Module</div>
+              <div class="admin-panel-subtitle">Cập nhật PDF và clip hướng dẫn</div>
+            </div>
+          </div>
+
+          <div class="admin-field">
+            <label class="admin-label" for="admin-module-select">Chọn module</label>
+            <div class="admin-select-wrap">
+              <select class="admin-select" id="admin-module-select">
+                ${moduleOptions.map(({ tab, parent }) => `
+                  <option value="${escapeHTML(tab.id)}">${escapeHTML(parent ? `${parent.label} / ${tab.label}` : tab.label)}</option>
+                `).join('')}
+              </select>
+              <span class="select-arrow">${ICONS.chevron}</span>
+            </div>
+          </div>
+
+          <div class="admin-field">
+            <label class="admin-label" for="admin-module-pdf">PDF module</label>
+            <input class="admin-input" id="admin-module-pdf" placeholder="Drive ID hoặc link Google Drive" />
+          </div>
+
+          <div class="admin-field">
+            <label class="admin-label" for="admin-module-video">Video module</label>
+            <input class="admin-input" id="admin-module-video" placeholder="Drive ID hoặc link Google Drive" />
+          </div>
+
+          <button type="submit" class="admin-primary-btn" ${firstModuleId ? '' : 'disabled'}>
+            ${ICONS.save}
+            <span>Lưu module</span>
+          </button>
+        </form>
+
+        <form class="admin-panel admin-panel-wide" id="admin-doc-form">
+          <div class="admin-panel-header">
+            <div>
+              <div class="admin-panel-title">Thêm / sửa tài liệu chung</div>
+              <div class="admin-panel-subtitle">Chọn tab, loại file rồi dán Drive ID hoặc link</div>
+            </div>
+          </div>
+
+          <input type="hidden" id="admin-doc-editing-id" />
+          <datalist id="admin-doc-category-options">
+            ${categoryValues.map((category) => `<option value="${escapeHTML(category)}"></option>`).join('')}
+          </datalist>
+
+          <div class="admin-form-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-doc-title">Tên tài liệu</label>
+              <input class="admin-input" id="admin-doc-title" required placeholder="Ví dụ: Danh sách ID" />
+            </div>
+
+            <div class="admin-field">
+              <label class="admin-label" for="admin-doc-section">Tab tài liệu</label>
+              <div class="admin-select-wrap">
+                <select class="admin-select" id="admin-doc-section">
+                  ${documentSections.map((section) => `
+                    <option value="${escapeHTML(section.id)}">${escapeHTML(section.label)}</option>
+                  `).join('')}
+                </select>
+                <span class="select-arrow">${ICONS.chevron}</span>
+              </div>
+            </div>
+
+            <div class="admin-field">
+              <label class="admin-label" for="admin-doc-category">Nhóm nhỏ</label>
+              <input class="admin-input" id="admin-doc-category" list="admin-doc-category-options" required placeholder="Quy định, Hướng dẫn, Giải thích..." />
+            </div>
+
+            <div class="admin-field">
+              <label class="admin-label" for="admin-doc-type">Loại file</label>
+              <div class="admin-select-wrap">
+                <select class="admin-select" id="admin-doc-type">
+                  ${Object.entries(FILE_TYPES).map(([type, config]) => `
+                    <option value="${type}">${config.label}</option>
+                  `).join('')}
+                </select>
+                <span class="select-arrow">${ICONS.chevron}</span>
+              </div>
+            </div>
+
+            <div class="admin-field admin-field-wide">
+              <label class="admin-label" for="admin-doc-desc">Mô tả</label>
+              <input class="admin-input" id="admin-doc-desc" placeholder="Mô tả ngắn hiển thị dưới tên tài liệu" />
+            </div>
+
+            <div class="admin-field admin-field-wide">
+              <label class="admin-label" for="admin-doc-source" id="admin-doc-source-label">Drive ID / link</label>
+              <input class="admin-input" id="admin-doc-source" placeholder="Drive ID hoặc link Google Drive" />
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-secondary-btn" id="admin-doc-clear">
+              ${ICONS.refresh}
+              <span>Làm mới form</span>
+            </button>
+            <button type="submit" class="admin-primary-btn" id="admin-doc-submit">
+              ${ICONS.plus}
+              <span>Thêm tài liệu</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="admin-panel admin-panel-wide">
+          <div class="admin-panel-header">
+            <div>
+              <div class="admin-panel-title">Danh sách tài liệu</div>
+              <div class="admin-panel-subtitle">${documents.length} tài liệu đang hiển thị</div>
+            </div>
+          </div>
+          <div class="admin-doc-list" id="admin-doc-list">
+            ${renderAdminDocumentList()}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  attachAdminDashboardEvents(container, firstModuleId);
+}
+
+function renderAdminDocumentList() {
+  if (!documents.length) {
+    return `
+      <div class="admin-doc-empty">
+        <div class="admin-doc-empty-icon">${ICONS.library}</div>
+        <span>Chưa có tài liệu chung.</span>
+      </div>
+    `;
+  }
+
+  return documentSections.map((section) => {
+    const sectionDocs = documents.filter((doc) => getDocSectionId(doc) === section.id);
+    return `
+      <div class="admin-doc-section">
+        <div class="admin-doc-section-title">
+          <span>${escapeHTML(section.label)}</span>
+          <small>${sectionDocs.length}</small>
+        </div>
+        ${sectionDocs.length
+          ? sectionDocs.map((doc) => {
+              const ft = getFileType(doc);
+              const source = doc.type === 'link' ? doc.url : doc.fileId;
+              return `
+                <div class="admin-doc-row">
+                  <div class="admin-doc-row-icon ${ft.colorClass}">${ft.icon()}</div>
+                  <div class="admin-doc-row-main">
+                    <div class="admin-doc-row-title">${escapeHTML(doc.title)}</div>
+                    <div class="admin-doc-row-meta">
+                      <span>${escapeHTML(doc.category || 'Khác')}</span>
+                      <span>${ft.label}</span>
+                      <span>${source ? escapeHTML(source) : 'Chưa có Drive ID'}</span>
+                    </div>
+                  </div>
+                  <div class="admin-doc-row-actions">
+                    <button type="button" class="admin-icon-btn" data-admin-doc-edit="${escapeHTML(doc.id)}" aria-label="Sửa ${escapeHTML(doc.title)}">
+                      ${ICONS.edit}
+                    </button>
+                    <button type="button" class="admin-icon-btn admin-danger-btn" data-admin-doc-delete="${escapeHTML(doc.id)}" aria-label="Xóa ${escapeHTML(doc.title)}">
+                      ${ICONS.trash}
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')
+          : '<div class="admin-doc-section-empty">Chưa có tài liệu trong tab này.</div>'
+        }
+      </div>
+    `;
+  }).join('');
+}
+
+function attachAdminDashboardEvents(container, firstModuleId) {
+  document.getElementById('admin-logout').addEventListener('click', async () => {
+    await logoutAdmin().catch(() => {});
+    showToast('Đã đăng xuất admin.', 'success');
+    renderAdminLogin(container);
+  });
+
+  document.getElementById('admin-export').addEventListener('click', exportAdminContent);
+
+  document.getElementById('admin-reset-content').addEventListener('click', async () => {
+    if (!window.confirm('Khôi phục dữ liệu gốc từ config.js? Các thay đổi admin trong trình duyệt này sẽ bị xóa.')) return;
+    const previousContent = getContentPayload();
+    try {
+      await resetContentState();
+      showToast('Đã khôi phục dữ liệu gốc và commit lên GitHub.', 'success');
+      renderAdminDashboard(container);
+    } catch (error) {
+      applyContentState(previousContent);
+      renderAdminDashboard(container);
+      showToast(error.message || 'Không thể khôi phục dữ liệu.', 'error');
+    }
+  });
+
+  document.getElementById('admin-home-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const previousContent = getContentPayload();
+    siteConfig.homePdf = extractDriveId(document.getElementById('admin-home-pdf').value);
+    siteConfig.homeVideo = extractDriveId(document.getElementById('admin-home-video').value);
+    try {
+      await saveContentState();
+      showToast('Đã lưu Home và commit lên GitHub.', 'success');
+      renderAdminDashboard(container);
+    } catch (error) {
+      applyContentState(previousContent);
+      renderAdminDashboard(container);
+      showToast(error.message || 'Không thể lưu Home.', 'error');
+    }
+  });
+
+  const moduleSelect = document.getElementById('admin-module-select');
+  const modulePdf = document.getElementById('admin-module-pdf');
+  const moduleVideo = document.getElementById('admin-module-video');
+
+  function fillModuleForm() {
+    const { tab } = findTabById(moduleSelect.value || firstModuleId);
+    modulePdf.value = tab?.pdf || '';
+    moduleVideo.value = tab?.video || '';
+  }
+
+  moduleSelect.addEventListener('change', fillModuleForm);
+  fillModuleForm();
+
+  document.getElementById('admin-module-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const { tab } = findTabById(moduleSelect.value);
+    if (!tab) return;
+
+    const previousContent = getContentPayload();
+    tab.pdf = extractDriveId(modulePdf.value);
+    tab.video = extractDriveId(moduleVideo.value);
+    try {
+      await saveContentState();
+      showToast('Đã lưu module và commit lên GitHub.', 'success');
+      renderAdminDashboard(container);
+    } catch (error) {
+      applyContentState(previousContent);
+      renderAdminDashboard(container);
+      showToast(error.message || 'Không thể lưu module.', 'error');
+    }
+  });
+
+  const docForm = document.getElementById('admin-doc-form');
+  const docEditingId = document.getElementById('admin-doc-editing-id');
+  const docSection = document.getElementById('admin-doc-section');
+  const docCategory = document.getElementById('admin-doc-category');
+  const docType = document.getElementById('admin-doc-type');
+  const docSource = document.getElementById('admin-doc-source');
+  const docSourceLabel = document.getElementById('admin-doc-source-label');
+  const docSubmit = document.getElementById('admin-doc-submit');
+
+  function updateSourceField() {
+    const isLink = docType.value === 'link';
+    docSourceLabel.textContent = isLink ? 'URL liên kết' : 'Drive ID / link Google Drive';
+    docSource.placeholder = isLink ? 'https://...' : 'Drive ID hoặc link Google Drive';
+  }
+
+  function clearDocForm() {
+    docForm.reset();
+    docEditingId.value = '';
+    docSection.value = activeDocSectionId || documentSections[0]?.id || '';
+    docCategory.value = docSection.value === 'rules-catalog'
+      ? 'Quy định'
+      : docSection.value === 'operation-guides'
+        ? 'Hướng dẫn'
+        : 'Quy trình';
+    docType.value = 'pdf';
+    updateSourceField();
+    docSubmit.innerHTML = `${ICONS.plus}<span>Thêm tài liệu</span>`;
+  }
+
+  docType.addEventListener('change', updateSourceField);
+  docSection.addEventListener('change', () => {
+    if (!docEditingId.value) {
+      docCategory.value = docSection.value === 'rules-catalog'
+        ? 'Quy định'
+        : docSection.value === 'operation-guides'
+          ? 'Hướng dẫn'
+          : 'Quy trình';
+    }
+  });
+
+  document.getElementById('admin-doc-clear').addEventListener('click', clearDocForm);
+
+  docForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const previousContent = getContentPayload();
+
+    const title = document.getElementById('admin-doc-title').value.trim();
+    const desc = document.getElementById('admin-doc-desc').value.trim();
+    const sectionId = docSection.value;
+    const category = docCategory.value.trim() || 'Khác';
+    const type = docType.value;
+    const source = docSource.value.trim();
+
+    if (!title) {
+      showToast('Vui lòng nhập tên tài liệu.', 'error');
+      return;
+    }
+
+    if (type === 'link' && source && safeExternalUrl(source) === '#') {
+      showToast('URL liên kết chưa hợp lệ.', 'error');
+      return;
+    }
+
+    const editingId = docEditingId.value;
+    const existingIndex = editingId ? documents.findIndex((doc) => doc.id === editingId) : -1;
+    const existingDoc = existingIndex >= 0 ? documents[existingIndex] : {};
+    const nextDoc = {
+      ...existingDoc,
+      id: editingId || createUniqueDocId(title),
+      title,
+      desc,
+      sectionId,
+      category,
+      type,
+      fileId: type === 'link' ? '' : extractDriveId(source),
+      url: type === 'link' ? source : '',
+    };
+
+    if (existingIndex >= 0) {
+      documents[existingIndex] = nextDoc;
+    } else {
+      documents.push(nextDoc);
+    }
+
+    activeDocSectionId = sectionId;
+    try {
+      await saveContentState();
+      showToast(existingIndex >= 0 ? 'Đã cập nhật và commit lên GitHub.' : 'Đã thêm tài liệu mới và commit lên GitHub.', 'success');
+      renderAdminDashboard(container);
+    } catch (error) {
+      applyContentState(previousContent);
+      renderAdminDashboard(container);
+      showToast(error.message || 'Không thể lưu tài liệu.', 'error');
+    }
+  });
+
+  container.querySelectorAll('[data-admin-doc-edit]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const doc = documents.find((item) => item.id === btn.dataset.adminDocEdit);
+      if (!doc) return;
+
+      docEditingId.value = doc.id;
+      document.getElementById('admin-doc-title').value = doc.title || '';
+      document.getElementById('admin-doc-desc').value = doc.desc || '';
+      docSection.value = getDocSectionId(doc);
+      docCategory.value = doc.category || '';
+      docType.value = doc.type || 'pdf';
+      docSource.value = doc.type === 'link' ? doc.url || '' : doc.fileId || '';
+      updateSourceField();
+      docSubmit.innerHTML = `${ICONS.save}<span>Lưu thay đổi</span>`;
+      docForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  container.querySelectorAll('[data-admin-doc-delete]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const doc = documents.find((item) => item.id === btn.dataset.adminDocDelete);
+      if (!doc) return;
+      if (!window.confirm(`Xóa tài liệu "${doc.title}"?`)) return;
+
+      const previousContent = getContentPayload();
+      documents = documents.filter((item) => item.id !== doc.id);
+      saveContentState()
+        .then(() => {
+          showToast('Đã xóa tài liệu và commit lên GitHub.', 'success');
+          renderAdminDashboard(container);
+        })
+        .catch((error) => {
+          applyContentState(previousContent);
+          renderAdminDashboard(container);
+          showToast(error.message || 'Không thể xóa tài liệu.', 'error');
+        });
+    });
+  });
+
+  clearDocForm();
+}
+
+function exportAdminContent() {
+  const payload = {
+    siteConfig: {
+      homePdf: siteConfig.homePdf || '',
+      homeVideo: siteConfig.homeVideo || '',
+    },
+    tabs,
+    documentSections,
+    documents,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `erp-guidance-content-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 // ─── Feedback Page ────────────────────────────────────────
@@ -1077,8 +1962,26 @@ function initTheme() {
   }
 }
 
+async function routeFromHash() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash === 'home') {
+    showHome();
+  } else if (hash === 'documents') {
+    showDocumentsPage();
+  } else if (hash === 'feedback') {
+    showFeedbackPage();
+  } else if (hash === 'admin') {
+    await showAdminPage();
+  } else if (hash) {
+    setActiveTab(hash);
+  } else {
+    showHome(); // Default landing page is Home
+  }
+}
+
 // ─── Init ─────────────────────────────────────────────────
-export function init() {
+export async function init() {
+  await loadContentState();
   initTheme();
   buildSidebar();
   renderWelcome();
@@ -1087,11 +1990,9 @@ export function init() {
     sidebarOpen ? closeMobileSidebar() : openMobileSidebar();
   });
   document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+  window.addEventListener('hashchange', () => {
+    routeFromHash().catch((error) => console.error('[ERP Guidance] Route failed:', error));
+  });
 
-  const hash = window.location.hash.replace('#', '');
-  if (hash) {
-    setActiveTab(hash);
-  } else {
-    showHome(); // Default landing page is Home
-  }
+  await routeFromHash();
 }
