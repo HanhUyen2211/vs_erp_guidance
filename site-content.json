@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-05T17:37:55.623Z",
+  "siteConfig": {
+    "companyName": "ERP Guidance",
+    "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
+    "logoText": "ERP",
+    "homePdf": "12-mXo9QiLRJ9IY-ei-1mdrabXXg2y4Uk",
+    "homeVideo": "1cAoYtNfdkxl9hm3NKJkwsQI4W58K2r7t",
+    "feedbackWebhookUrl": "https://script.google.com/macros/s/AKfycbwMj0ahepKHiB9FLmNEaHAFZy8F3jV2kzTDzBGSxwotsN5QcygUXrMxD0Lj1PGvjyw1Ww/exec"
+  },
+  "tabs": [
+    {
+      "id": "login",
+      "label": "Login",
+      "icon": "🔐",
+      "pdf": "",
+      "video": ""
+    },
+    {
+      "id": "item-master",
+      "label": "Item Master",
+      "icon": "📦",
+      "pdf": "1lgq3FWU-cWKvLEFK8fz2-U3-KjiFYZ0p",
+      "video": "1AJdOQ-mk3ZMsawrUX2XYhwzzX2gu41Ba"
+    },
+    {
+      "id": "bom",
+      "label": "BOM",
+      "icon": "🧩",
+      "pdf": "10L6h803r8qumQyWxTBvs04rpyyV18bjG",
+      "video": "14LPkv5qIJ6vocKyF6MlRlkBjLpGeb4en"
+    },
+    {
+      "id": "sales-order",
+      "label": "Sales Order",
+      "icon": "🛒",
+      "pdf": "1JbTkkjZZghw6YoG-MixfUjfKUgEdUl4Q",
+      "video": "1_F92MNPdxTU4wNTnhhukjarZveUtIYSe"
+    },
+    {
+      "id": "production-order",
+      "label": "Production Order",
+      "icon": "🏭",
+      "children": [
+        {
+          "id": "production-order-main",
+          "label": "Production Order",
+          "description": "Lập lệnh sản xuất",
+          "pdf": "1wHiMD5B8SVQ3XGtNcyeFv-EILslOWRG4",
+          "video": "1jy5SJrtVE_B6fMFiGLw3GHViCs-VnXWt"
+        },
+        {
+          "id": "recipe",
+          "label": "Recipe",
+          "description": "Tạo quy trình sản xuất",
+          "pdf": "10n-eBMqkL6mCL03FX4574m-Ud0h57COi",
+          "video": ""
+        },
+        {
+          "id": "terminal",
+          "label": "Terminal",
+          "description": "Sử dụng terminal để scan lệnh sản xuất",
+          "pdf": "1di6vOR1IBflOdDwo2FBj37HN7PKGaCLH",
+          "video": ""
+        }
+      ]
+    },
+    {
+      "id": "purchase",
+      "label": "Purchase",
+      "icon": "💳",
+      "children": [
+        {
+          "id": "purchase-requisitions",
+          "label": "Purchase Requisitions",
+          "description": "Yêu cầu mua hàng",
+          "pdf": "13ZUVisFAE_YKIesT6rtEmD54LC8kFpmz",
+          "video": "1AgitrewAIdfwEeOTEsTko362ulKZ3nYH"
+        },
+        {
+          "id": "purchase-orders",
+          "label": "Purchase Orders",
+          "description": "Đơn đặt hàng",
+          "pdf": "1f4w9KoRU7Ek7fUeRqhsqSSFqp0zxmQbr",
+          "video": "1Yd4MQV6joCwlGDNRjXSl8hdT103lX-tL"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "label": "Delivery",
+      "icon": "🚚",
+      "children": [
+        {
+          "id": "outbound-delivery",
+          "label": "Outbound Delivery",
+          "description": "Giao hàng đi",
+          "pdf": "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+          "video": "1BKelm1HQiWkKHqFL1cDOtIgTFwXk1Hwo"
+        },
+        {
+          "id": "inbound-delivery",
+          "label": "Inbound Delivery",
+          "description": "Nhận hàng về",
+          "pdf": "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+          "video": "1-4q2Ztf9N-uj3WTbQGSo3EdJcRwkBYZM"
+        },
+        {
+          "id": "good-issues",
+          "label": "Good Issues",
+          "description": "Xuất kho",
+          "pdf": "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+          "video": "1SaTiE5-_Yn1wPX7TaWlrJ7-H6OXSJwOS"
+        },
+        {
+          "id": "good-receipts",
+          "label": "Good Receipts",
+          "description": "Nhập kho",
+          "pdf": "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+          "video": "1RDjaeefj9g4s1rAAzYmzctA11HxwOgHz"
+        }
+      ]
+    },
+    {
+      "id": "invoice",
+      "label": "Invoice",
+      "icon": "🧾",
+      "pdf": "16TKjdI4amqAJib1PNhcpecwFkgz5jj3Y",
+      "video": "1Nn86HMpur8nnuHkSr8h4xC1R-fxe8KNV"
+    }
+  ],
+  "documents": [
+    {
+      "id": "code_guidance",
+      "title": "Hướng dẫn mã code",
+      "desc": "Quy định về mã code",
+      "fileId": "1oYU55d09AOEz_NBgCVaW-QyCvWFx4SFv",
+      "type": "xlsx",
+      "category": "Quy định",
+      "sectionId": "rules-catalog"
+    },
+    {
+      "id": "id_list",
+      "title": "Danh sách ID",
+      "desc": "Thêm mới",
+      "fileId": "",
+      "type": "xlsx",
+      "category": "Thêm mới",
+      "sectionId": "rules-catalog"
+    },
+    {
+      "id": "machine_list",
+      "title": "Danh sách máy",
+      "desc": "Danh sách mã máy",
+      "fileId": "1CW3AP1ANTEBhOrN7q1eUMiBSSgwNM8EX",
+      "type": "xlsx",
+      "category": "Danh mục",
+      "sectionId": "rules-catalog",
+      "url": ""
+    },
+    {
+      "id": "direct_delivery_guidance",
+      "title": "Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
+      "desc": "Hướng dẫn tạo đơn giao hàng trực tiếp khi có tồn kho",
+      "fileId": "1qDimabt8D3VCwKuW2cr1Uomi8SGmaTMe",
+      "type": "pptx",
+      "category": "Hướng dẫn",
+      "sectionId": "operation-guides"
+    },
+    {
+      "id": "scaning_wo_guidance",
+      "title": "Hướng dẫn sử dụng terminal",
+      "desc": "Hướng dẫn sử dụng terminal để scan lệnh sản xuất",
+      "fileId": "11LWYex7HOOXuqcZEAr98_OgKxzxj7oE7",
+      "type": "pdf",
+      "category": "Hướng dẫn",
+      "sectionId": "operation-guides"
+    },
+    {
+      "id": "generate_wo_guidance",
+      "title": "Hướng dẫn tạo lệnh sản xuất",
+      "desc": "Hướng dẫn tạo lệnh sản xuất",
+      "fileId": "1OlW6869fM2aBt2By1fGelNeuRq0etIxe",
+      "type": "pdf",
+      "category": "Hướng dẫn",
+      "sectionId": "operation-guides"
+    },
+    {
+      "id": "erp_demo_flow",
+      "title": "ERP Demo Flow",
+      "desc": "Quy trình ERP thử nghiệm",
+      "fileId": "1F8UKUPg5zE9uBcojkZgW99n79uuZZRAR",
+      "type": "pdf",
+      "category": "Quy trình",
+      "sectionId": "references"
+    },
+    {
+      "id": "explain_mac",
+      "title": "Giải thích MAC",
+      "desc": "Giải thích về mã MAC",
+      "fileId": "1aDR8Jp_Nk4mfZRejqrXiUqtH4KAym2JW",
+      "type": "docx",
+      "category": "Giải thích",
+      "sectionId": "references"
+    },
+    {
+      "id": "explain_stock_types",
+      "title": "Giải thích loại tồn kho",
+      "desc": "Giải thích về các loại tồn kho",
+      "fileId": "1mQJUpNagnQFauy0i38lLNI8QVZIfQWLy",
+      "type": "docx",
+      "category": "Giải thích",
+      "sectionId": "references"
+    },
+    {
+      "id": "explain_prod_orders_types",
+      "title": "Giải thích các loại lệnh sản xuất",
+      "desc": "Giải thích về các loại lệnh sản xuất",
+      "fileId": "1I_P88V0jZuMmKB7yePR5jW0Z1QjJ696b",
+      "type": "docx",
+      "category": "Giải thích",
+      "sectionId": "references"
+    }
+  ],
+  "documentSections": [
+    {
+      "id": "rules-catalog",
+      "label": "Quy định & Danh mục",
+      "desc": "Quy định và danh mục dữ liệu nền"
+    },
+    {
+      "id": "operation-guides",
+      "label": "Hướng dẫn thao tác",
+      "desc": "Các hướng dẫn thực hiện nghiệp vụ"
+    },
+    {
+      "id": "references",
+      "label": "Tài liệu tham khảo",
+      "desc": "Quy trình và giải thích khái niệm"
+    }
+  ]
+}
