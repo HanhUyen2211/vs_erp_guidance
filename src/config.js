@@ -244,7 +244,7 @@ export const tabs = [
         id: "terminal",
         label: "Terminal",
         description: "Sử dụng terminal để scan lệnh sản xuất",
-        pdf: "",
+        pdf: "1di6vOR1IBflOdDwo2FBj37HN7PKGaCLH",
         video: "",
       },
     ],
