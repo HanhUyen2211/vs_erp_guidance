@@ -237,6 +237,13 @@ export const tabs = [
         id: "recipe",
         label: "Recipe",
         description: "Tạo quy trình sản xuất",
+        pdf: "10n-eBMqkL6mCL03FX4574m-Ud0h57COi",
+        video: "",
+      },
+      {
+        id: "terminal",
+        label: "Terminal",
+        description: "Sử dụng terminal để scan lệnh sản xuất",
         pdf: "",
         video: "",
       },
