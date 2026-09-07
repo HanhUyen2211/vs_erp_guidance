@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-07T02:06:27.968Z",
+  "updatedAt": "2026-09-07T02:17:52.784Z",
   "siteConfig": {
     "companyName": "ERP Guidance",
     "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
@@ -222,6 +222,16 @@
       "type": "docx",
       "category": "Giải thích",
       "sectionId": "references"
+    },
+    {
+      "id": "danh-sach-ma-cong-doan-recipe",
+      "title": "Danh sách mã công đoạn (Recipe)",
+      "desc": "Danh sách mã công đoạn sản xuất",
+      "sectionId": "rules-catalog",
+      "category": "Danh mục",
+      "type": "xlsx",
+      "fileId": "1HfdX77N_BE0BzfQEc15xKQHdNmpaGTwK",
+      "url": ""
     }
   ],
   "documentSections": [
