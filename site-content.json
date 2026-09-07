@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-07T02:06:18.201Z",
+  "updatedAt": "2026-09-07T02:06:27.968Z",
   "siteConfig": {
     "companyName": "ERP Guidance",
     "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
@@ -142,7 +142,7 @@
     },
     {
       "id": "id_list",
-      "title": "Danh sách ID",
+      "title": "Danh sách ID Terminal",
       "desc": "Danh mục danh sách ID nhân viên dưới xưởng",
       "fileId": "1-C1RuQ_hxp7bj8gmPWP8iviEt_aRrhZfnCglAXK5YvM",
       "type": "xlsx",
