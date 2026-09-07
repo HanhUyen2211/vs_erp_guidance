@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-05T17:37:55.623Z",
+  "updatedAt": "2026-09-07T02:06:18.201Z",
   "siteConfig": {
     "companyName": "ERP Guidance",
     "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
@@ -143,11 +143,12 @@
     {
       "id": "id_list",
       "title": "Danh sách ID",
-      "desc": "Thêm mới",
-      "fileId": "",
+      "desc": "Danh mục danh sách ID nhân viên dưới xưởng",
+      "fileId": "1-C1RuQ_hxp7bj8gmPWP8iviEt_aRrhZfnCglAXK5YvM",
       "type": "xlsx",
-      "category": "Thêm mới",
-      "sectionId": "rules-catalog"
+      "category": "Danh mục",
+      "sectionId": "rules-catalog",
+      "url": ""
     },
     {
       "id": "machine_list",
