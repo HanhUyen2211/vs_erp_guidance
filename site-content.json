@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-07T02:17:52.784Z",
+  "updatedAt": "2026-09-11T03:24:24.344Z",
   "siteConfig": {
     "companyName": "ERP Guidance",
     "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
@@ -231,6 +231,16 @@
       "category": "Danh mục",
       "type": "xlsx",
       "fileId": "1HfdX77N_BE0BzfQEc15xKQHdNmpaGTwK",
+      "url": ""
+    },
+    {
+      "id": "huong-dan-theo-doi-tien-do",
+      "title": "HƯỚNG DẪN THEO DÕI TIẾN ĐỘ",
+      "desc": "Hướng dẫn theo dõi tiến độ đơn hàng trên hệ thống ERP",
+      "sectionId": "operation-guides",
+      "category": "Hướng dẫn",
+      "type": "pdf",
+      "fileId": "1lesqWDGotgAE8t1SEHJdubq9h7frd7_L",
       "url": ""
     }
   ],
