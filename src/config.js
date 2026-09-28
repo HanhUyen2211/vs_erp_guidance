@@ -293,6 +293,13 @@ export const tabs = [
         video: "1AgitrewAIdfwEeOTEsTko362ulKZ3nYH",
       },
       {
+        id: "request-for-quotation",
+        label: "Request for Quotation",
+        description: "Yêu cầu báo giá",
+        pdf: "",
+        video: "1b9pgbHOeRiYEbbZJL2ixLqy2N3dOl0Tx",
+      },
+      {
         id: "purchase-orders",
         label: "Purchase Orders",
         description: "Đơn đặt hàng",
