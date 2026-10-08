@@ -4,6 +4,7 @@ import {
   documents as defaultDocuments,
   documentSections as defaultDocumentSections,
 } from './config.js';
+import { mergeContentTabs } from './content-tabs.js';
 
 // ─── Danh sách bộ phận ───────────────────────────────────
 const DEPARTMENTS = [
@@ -197,7 +198,7 @@ function applyContentState(content = {}) {
     homePdf: nextSiteConfig.homePdf || '',
     homeVideo: nextSiteConfig.homeVideo || '',
   };
-  tabs = Array.isArray(content.tabs) ? cloneContent(content.tabs) : defaults.tabs;
+  tabs = mergeContentTabs(content.tabs);
   documents = normalizeDocuments(Array.isArray(content.documents) ? cloneContent(content.documents) : defaults.documents);
   documentSections = Array.isArray(content.documentSections) && content.documentSections.length > 0
     ? cloneContent(content.documentSections)
@@ -1963,7 +1964,11 @@ function initTheme() {
 }
 
 async function routeFromHash() {
-  const hash = window.location.hash.replace('#', '');
+  let hash = window.location.hash.replace('#', '');
+  if (hash === 'production-order-main' && !findTabById(hash).tab) {
+    hash = 'create-wo';
+    window.history.replaceState(null, '', `#${hash}`);
+  }
   if (hash === 'home') {
     showHome();
   } else if (hash === 'documents') {

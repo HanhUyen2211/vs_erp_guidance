@@ -7,6 +7,7 @@ import {
   readGithubContent,
   writeGithubContent,
 } from './_lib.js';
+import { mergeContentTabs } from '../src/content-tabs.js';
 
 function mergePayload(body = {}) {
   const defaults = getDefaultContent();
@@ -17,7 +18,7 @@ function mergePayload(body = {}) {
       ...defaults.siteConfig,
       ...(body.siteConfig && typeof body.siteConfig === 'object' ? body.siteConfig : {}),
     },
-    tabs: Array.isArray(body.tabs) ? body.tabs : defaults.tabs,
+    tabs: mergeContentTabs(body.tabs),
     documents: Array.isArray(body.documents) ? body.documents : defaults.documents,
     documentSections: Array.isArray(body.documentSections) ? body.documentSections : defaults.documentSections,
   };
@@ -37,7 +38,11 @@ export async function GET() {
       return json({ ...defaults, source: 'defaults' });
     }
 
-    return json({ ...stored.content, source: 'github' });
+    return json({
+      ...stored.content,
+      tabs: mergeContentTabs(stored.content.tabs),
+      source: 'github',
+    });
   } catch (error) {
     return json({ ...defaults, source: 'defaults', warning: error.message }, { status: 200 });
   }

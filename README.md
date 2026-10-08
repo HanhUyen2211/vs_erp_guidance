@@ -70,7 +70,7 @@ Admin có thể cập nhật:
 | BOM | — |
 | Sales Order | — |
 | Production Order | Production Order, Recipe |
-| Purchase | Purchase Requisitions, Purchase Orders |
+| Purchase | Purchase Requisitions, Request for Quotation, Purchase Orders |
 | Delivery | Outbound, Inbound, Good Issues, Good Receipts |
 | Invoice | — |
 
