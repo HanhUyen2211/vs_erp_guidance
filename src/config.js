@@ -295,7 +295,7 @@ export const tabs = [
       {
         id: "request-for-quotation",
         label: "Request for Quotation",
-        description: "Yêu cầu báo giá",
+        description: "Yêu cầu báo giá NCC",
         pdf: "1W69tuQMZOeaKmZS5guZ7rvLBT97WDfJ5",
         video: "1b9pgbHOeRiYEbbZJL2ixLqy2N3dOl0Tx",
       },
