@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-11T03:24:24.344Z",
+  "updatedAt": "2026-10-08T04:02:50.222Z",
   "siteConfig": {
     "companyName": "ERP Guidance",
     "subtitle": "Hệ thống Hướng dẫn Sử dụng ERP",
@@ -241,6 +241,16 @@
       "category": "Hướng dẫn",
       "type": "pdf",
       "fileId": "1lesqWDGotgAE8t1SEHJdubq9h7frd7_L",
+      "url": ""
+    },
+    {
+      "id": "huong-dan-dat-lich-co-dinh-cho-cong-doan",
+      "title": "HƯỚNG DẪN ĐẶT LỊCH CỐ ĐỊNH CHO CÔNG ĐOẠN",
+      "desc": "Hướng dẫn theo dõi tiến độ đơn hàng trên hệ thống ERP",
+      "sectionId": "operation-guides",
+      "category": "Hướng dẫn",
+      "type": "pdf",
+      "fileId": "1qc6FMfyjx92aq0E3iy1s_O54mySYV72F",
       "url": ""
     }
   ],
